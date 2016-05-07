@@ -57,7 +57,7 @@ function processEvent(event) {
                                     "buttons": [
                                         {
                                             "type": "postback",
-                                            "payload": parameters,
+                                            "payload": JSON.stringify(parameters),
                                             "title": "Confirm"
                                         },
                                         {
@@ -203,7 +203,7 @@ app.get('/webhook/', function (req, res) {
 
 app.post('/webhook/', function (req, res) {
 
-    console.log("request body: " + req.body.entry[0]);
+    console.log(req.body.entry[0]);
 
     try {
         var messaging_events = req.body.entry[0].messaging;
