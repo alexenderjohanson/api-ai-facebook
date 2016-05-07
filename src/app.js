@@ -27,8 +27,6 @@ function processEvent(event) {
             sessionIds.set(sender, uuid.v1());
         }
 
-        console.log("Text", text);
-
         // contexts.has(sender){
 
         // }
@@ -58,7 +56,7 @@ function processEvent(event) {
                                     "subtitle": JSON.stringify(parameters),
                                     "buttons": [
                                         {
-                                            "type": "poatback",
+                                            "type": "postback",
                                             "payload": parameters,
                                             "title": "Confirm"
                                         },
