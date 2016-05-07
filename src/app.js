@@ -180,9 +180,9 @@ function getFbUserProfile(fbUserId) {
     }).then(function (json) {
         console.log(json);
         return json;
-    }, function(error){
+    }, function (error) {
         console.log(error);
-    );
+    });
 }
 
 function sendFBMessage(sender, messageData) {
