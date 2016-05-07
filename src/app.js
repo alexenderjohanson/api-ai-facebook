@@ -23,7 +23,7 @@ function processEvent(event) {
 
         try {
             console.log("postback:" + event.postback);
-            text = JSON.stringify(event.postback);
+            let text = JSON.stringify(event.postback);
             let messageData = {
                 "text": text
             };
