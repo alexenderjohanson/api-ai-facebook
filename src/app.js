@@ -5,6 +5,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const uuid = require('node-uuid');
 const request = require('request');
+const fetch = require('node-fetch');
 
 const REST_PORT = (process.env.PORT || 5000);
 const APIAI_ACCESS_TOKEN = process.env.APIAI_ACCESS_TOKEN;
@@ -15,6 +16,7 @@ const FB_PAGE_ACCESS_TOKEN = process.env.FB_PAGE_ACCESS_TOKEN;
 const apiAiService = apiai(APIAI_ACCESS_TOKEN, { language: APIAI_LANG, requestSource: "fb" });
 const sessionIds = new Map();
 const contexts = new Map();
+const userProfiles = new Map();
 
 function processEvent(event) {
     var sender = event.sender.id;
@@ -38,6 +40,7 @@ function processEvent(event) {
 
         if (!sessionIds.has(sender)) {
             sessionIds.set(sender, uuid.v1());
+            userProfiles.set(sender, getFbUserProfile(sender))
         }
         
         let context = null;
@@ -74,8 +77,9 @@ function processEvent(event) {
 
                 if (action == "food-ordering" && complete) {
 
+                    let userProfile = userProfiles.get(sender);
                     let repeatOrder = {
-                        "text": `Let me repeat your order: \nName: ${parameters.name} \nContact: ${parameters.contact} \nAddress: ${parameters.address} \nFood: ${parameters.food}`
+                        "text": `Let me repeat your order: \nName: ${userProfile.first_name} \nContact: ${parameters.contact} \nAddress: ${parameters.address} \nFood: ${parameters.food}`
                     }
 
                     let messageData = {
@@ -167,6 +171,15 @@ function chunkString(s, len) {
     }
     output.push(s.substr(prev));
     return output;
+}
+
+function getFbUserProfile(fbUserId){
+    
+    return fetch(`https://graph.facebook.com/v2.6/${fbUserId}?fields=first_name,last_name,profile_pic,locale,timezone,gender&access_token=${FB_PAGE_ACCESS_TOKEN}`).then(function(res){
+        return res.json();
+    }).then(function (json){
+       return json; 
+    });
 }
 
 function sendFBMessage(sender, messageData) {
