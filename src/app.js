@@ -20,13 +20,18 @@ function processEvent(event) {
     var sender = event.sender.id;
 
     if (event.postback) {
-        console.log("postback:" + event.postback);
-        text = JSON.stringify(event.postback);
-        let messageData = {
-            "text": text
-        };
-        console.log("sending postback data");
-        sendFBMessage(sender, messageData);
+
+        try {
+            console.log("postback:" + event.postback);
+            text = JSON.stringify(event.postback);
+            let messageData = {
+                "text": text
+            };
+            console.log("sending postback data");
+            sendFBMessage(sender, messageData);
+        } catch (err) {
+            console.log(err)
+        }
     } else if (event.message && event.message.text) {
         let text = event.message.text;
         // Handle a text message from this sender
@@ -142,9 +147,9 @@ function chunkString(s, len) {
 }
 
 function sendFBMessage(sender, messageData) {
-    
+
     console.log("send fb message:" + JSON.stringify(messageData));
-    
+
     request({
         url: 'https://graph.facebook.com/v2.6/me/messages',
         qs: { access_token: FB_PAGE_ACCESS_TOKEN },
