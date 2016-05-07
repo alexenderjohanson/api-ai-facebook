@@ -121,9 +121,10 @@ function processEvent(event) {
                 } else if (action == "food-ordering" && complete) {
 
                     try {
+                        sendFBMessage(sender, responseData.facebook);
+                        processResponseData(sender, responseData);
                         intentParameters.set(sender, parameters);
                         contexts.set(sender, responseContexts);
-                        processResponseData(sender, responseData);
                     } catch (err) {
                         sendFBMessage(sender, { text: err.message });
                     }
