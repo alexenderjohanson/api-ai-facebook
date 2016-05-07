@@ -44,6 +44,7 @@ function processEvent(event) {
                 let responseData = response.result.fulfillment.data;
                 let action = response.result.action;
                 let complete = !response.result.actionIncomplete;
+                let parameters = response.result.parameters;
                 // let contexts = response.result.contexts;
 
                 if (action == "food-ordering" && complete) {
@@ -53,28 +54,36 @@ function processEvent(event) {
                             "payload": {
                                 "template_type": "generic",
                                 "elements": [{
-                                    "title": "First card",
-                                    "subtitle": "Element #1 of an hscroll",
-                                    "image_url": "http://messengerdemo.parseapp.com/img/rift.png",
-                                    "buttons": [{
-                                        "type": "web_url",
-                                        "url": "https://www.messenger.com/",
-                                        "title": "Web url"
-                                    }, {
+                                    "title": "Confirm your order",
+                                    "subtitle": JSON.stringify(parameters),
+                                    "buttons": [
+                                        {
+                                            "type": "poatback",
+                                            "payload": parameters,
+                                            "title": "Confirm"
+                                        },
+                                        {
                                             "type": "postback",
-                                            "title": "Postback",
+                                            "title": "Edit address",
                                             "payload": "Payload for first element in a generic bubble",
-                                        }],
-                                }, {
-                                        "title": "Second card",
-                                        "subtitle": "Element #2 of an hscroll",
-                                        "image_url": "http://messengerdemo.parseapp.com/img/gearvr.png",
-                                        "buttons": [{
+                                        },
+                                        {
                                             "type": "postback",
-                                            "title": "Postback",
-                                            "payload": "Payload for second element in a generic bubble",
-                                        }],
-                                    }]
+                                            "title": "Edit contact number",
+                                            "payload": "Payload for first element in a generic bubble",
+                                        },
+                                        {
+                                            "type": "postback",
+                                            "title": "Edit name",
+                                            "payload": "Payload for first element in a generic bubble",
+                                        },
+                                        {
+                                            "type": "postback",
+                                            "title": "Edit food",
+                                            "payload": "Payload for first element in a generic bubble",
+                                        }
+                                    ],
+                                }]
                             }
                         }
                     };
@@ -211,7 +220,7 @@ app.get('/webhook/', function (req, res) {
 
 app.post('/webhook/', function (req, res) {
 
-    console.log("request body: " + req.body);
+    console.log("request body: " + req.body.entry[0]);
 
     try {
         var messaging_events = req.body.entry[0].messaging;
@@ -225,7 +234,7 @@ app.post('/webhook/', function (req, res) {
                 processEvent(event);
             }
         }
-        
+
         return res.status(200).json({
             status: "ok"
         });
