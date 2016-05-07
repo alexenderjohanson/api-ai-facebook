@@ -42,22 +42,22 @@ function processEvent(event) {
             sessionIds.set(sender, uuid.v1());
             userProfiles.set(sender, getFbUserProfile(sender))
         }
-        
+
         let context = null;
-        if(contexts.has(sender)){
+        if (contexts.has(sender)) {
             context = contexts.get(sender);
         }
-        
-        if(context && context.length){
+
+        if (context && context.length) {
             let name = context[0].name;
-            
-            if(name == "jom_makan_dialog_params_address"){
+
+            if (name == "jom_makan_dialog_params_address") {
                 context = context.splice(0, 1);
                 context[0].parameters.address;
-                text="";
+                text = "";
             }
         }
-        
+
         let apiaiRequest = apiAiService.textRequest(text,
             {
                 sessionId: sessionIds.get(sender),
@@ -72,7 +72,7 @@ function processEvent(event) {
                 let complete = !response.result.actionIncomplete;
                 let parameters = response.result.parameters;
                 let resultContexts = response.result.contexts;
-                
+
                 contexts.set(sender, resultContexts);
 
                 if (action == "food-ordering" && complete) {
@@ -173,13 +173,16 @@ function chunkString(s, len) {
     return output;
 }
 
-function getFbUserProfile(fbUserId){
-    
-    return fetch(`https://graph.facebook.com/v2.6/${fbUserId}?fields=first_name,last_name,profile_pic,locale,timezone,gender&access_token=${FB_PAGE_ACCESS_TOKEN}`).then(function(res){
+function getFbUserProfile(fbUserId) {
+
+    return fetch(`https://graph.facebook.com/v2.6/${fbUserId}?fields=first_name,last_name,profile_pic,locale,timezone,gender&access_token=${FB_PAGE_ACCESS_TOKEN}`).then(function (res) {
         return res.json();
-    }).then(function (json){
-       return json; 
-    });
+    }).then(function (json) {
+        console.log(json);
+        return json;
+    }, function(error){
+        console.log(error);
+    );
 }
 
 function sendFBMessage(sender, messageData) {
@@ -251,8 +254,6 @@ app.post('/webhook/', function (req, res) {
 
     try {
         var messaging_events = req.body.entry[0].messaging;
-        
-        console.log(messaging_events);
 
         for (var i = 0; i < messaging_events.length; i++) {
             var event = messaging_events[i];
