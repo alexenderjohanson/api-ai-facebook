@@ -49,7 +49,9 @@ function processEvent(event) {
             let name = context[0].name;
             
             if(name == "jom_makan_dialog_params_address"){
+                context = context.splice(0, 1);
                 context[0].parameters.address;
+                text="";
             }
         }
         
