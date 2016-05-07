@@ -43,7 +43,7 @@ function processEvent(event) {
                 let responseText = response.result.fulfillment.speech;
                 let responseData = response.result.fulfillment.data;
                 let action = response.result.action;
-                let complete = response.result.actionIncomplete;
+                let complete = !response.result.actionIncomplete;
                 // let contexts = response.result.contexts;
 
                 if (action == "food-ordering" && complete) {
@@ -210,12 +210,23 @@ app.get('/webhook/', function (req, res) {
 });
 
 app.post('/webhook/', function (req, res) {
+
+    console.log("request body: " + req.body);
+
     try {
         var messaging_events = req.body.entry[0].messaging;
-        for (var i = 0; i < messaging_events.length; i++) {
-            var event = req.body.entry[0].messaging[i];
-            processEvent(event);
+
+        if (event.postback) {
+            text = JSON.stringify(event.postback);
+            sendTextMessage(sender, "Postback received: " + text.substring(0, 200), token);
+            continue;
+        } else {
+            for (var i = 0; i < messaging_events.length; i++) {
+                var event = req.body.entry[0].messaging[i];
+                processEvent(event);
+            }
         }
+        
         return res.status(200).json({
             status: "ok"
         });
