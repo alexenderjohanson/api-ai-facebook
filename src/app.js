@@ -216,10 +216,9 @@ app.post('/webhook/', function (req, res) {
     try {
         var messaging_events = req.body.entry[0].messaging;
 
-        if (event.postback) {
-            text = JSON.stringify(event.postback);
-            sendTextMessage(sender, "Postback received: " + text.substring(0, 200), token);
-            continue;
+        if (messaging_events.postback) {
+            text = JSON.stringify(messaging_events.postback);
+            sendFBMessage(sender, "Postback received: " + text.substring(0, 200));
         } else {
             for (var i = 0; i < messaging_events.length; i++) {
                 var event = req.body.entry[0].messaging[i];
