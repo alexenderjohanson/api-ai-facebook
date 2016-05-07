@@ -40,28 +40,29 @@ function processEvent(event) {
 
         if (!sessionIds.has(sender)) {
             sessionIds.set(sender, uuid.v1());
-            userProfiles.set(sender, getFbUserProfile(sender))
+            getFbUserProfile(sender).then(function (profile) {
+                userProfiles.set(sender, profile);
+            })
         }
 
-        let context = null;
-        if (contexts.has(sender)) {
-            context = contexts.get(sender);
-        }
+        // let context = null;
+        // if (contexts.has(sender)) {
+        //     context = contexts.get(sender);
+        // }
 
-        if (context && context.length) {
-            let name = context[0].name;
+        // if (context && context.length) {
+        //     let name = context[0].name;
 
-            if (name == "jom_makan_dialog_params_address") {
-                context = context.splice(0, 1);
-                context[0].parameters.address;
-                text = "";
-            }
-        }
+        //     if (name == "jom_makan_dialog_params_address") {
+        //         context = context.splice(0, 1);
+        //         context[0].parameters.address;
+        //         text = "";
+        //     }
+        // }
 
         let apiaiRequest = apiAiService.textRequest(text,
             {
-                sessionId: sessionIds.get(sender),
-                context: context
+                sessionId: sessionIds.get(sender)
             });
 
         apiaiRequest.on('response', (response) => {
@@ -73,7 +74,7 @@ function processEvent(event) {
                 let parameters = response.result.parameters;
                 let resultContexts = response.result.contexts;
 
-                contexts.set(sender, resultContexts);
+                // contexts.set(sender, resultContexts);
 
                 if (action == "food-ordering" && complete) {
 
@@ -178,7 +179,6 @@ function getFbUserProfile(fbUserId) {
     return fetch(`https://graph.facebook.com/v2.6/${fbUserId}?fields=first_name,last_name,profile_pic,locale,timezone,gender&access_token=${FB_PAGE_ACCESS_TOKEN}`).then(function (res) {
         return res.json();
     }).then(function (json) {
-        console.log(json);
         return json;
     }, function (error) {
         console.log(error);
