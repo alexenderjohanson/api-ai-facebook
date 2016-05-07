@@ -80,45 +80,53 @@ function processEvent(event) {
                 // contexts.set(sender, resultContexts);
                 if (action == "get-address" && complete) {
 
-                    let userProfile = userProfiles.get(sender);
-                    let orderParameters = intentParameters.get(sender);
-                    
-                    let repeatOrder = {
-                        "text": `Let me repeat your order: \nName: ${userProfile.first_name} \nContact: ${orderParameters.contact} \nAddress: ${parameters.address} \nFood: ${orderParameters.food}`
-                    }
+                    try {
+                        let userProfile = userProfiles.get(sender);
+                        let orderParameters = intentParameters.get(sender);
 
-                    let messageData = {
-                        "attachment": {
-                            "type": "template",
-                            "payload": {
-                                "template_type": "generic",
-                                "elements": [{
-                                    "title": "Confirm your order?",
-                                    "buttons": [
-                                        {
-                                            "type": "postback",
-                                            "payload": JSON.stringify(parameters),
-                                            "title": "Confirm"
-                                        },
-                                        {
-                                            "type": "postback",
-                                            "title": "Edit order",
-                                            "payload": "Payload for first element in a generic bubble",
-                                        }
-                                    ],
-                                }]
-                            }
+                        let repeatOrder = {
+                            "text": `Let me repeat your order: \nName: ${userProfile.first_name} \nContact: ${orderParameters.contact} \nAddress: ${parameters.address} \nFood: ${orderParameters.food}`
                         }
-                    };
 
-                    sendFBMessage(sender, repeatOrder);
-                    sendFBMessage(sender, messageData);
+                        let messageData = {
+                            "attachment": {
+                                "type": "template",
+                                "payload": {
+                                    "template_type": "generic",
+                                    "elements": [{
+                                        "title": "Confirm your order?",
+                                        "buttons": [
+                                            {
+                                                "type": "postback",
+                                                "payload": JSON.stringify(parameters),
+                                                "title": "Confirm"
+                                            },
+                                            {
+                                                "type": "postback",
+                                                "title": "Edit order",
+                                                "payload": "Payload for first element in a generic bubble",
+                                            }
+                                        ],
+                                    }]
+                                }
+                            }
+                        };
+
+                        sendFBMessage(sender, repeatOrder);
+                        sendFBMessage(sender, messageData);
+                    } catch (err) {
+                        sendFBMessage(sender, { text: err.message });
+                    }
 
                 } else if (action == "food-ordering" && complete) {
 
-                    intentParameters.set(sender, parameters);
-                    contexts.set(sender, responseContexts);
-                    processResponseData(sender, responseData);
+                    try {
+                        intentParameters.set(sender, parameters);
+                        contexts.set(sender, responseContexts);
+                        processResponseData(sender, responseData);
+                    } catch (err) {
+                        sendFBMessage(sender, { text: err.message });
+                    }
                 } else if (isDefined(responseData) && isDefined(responseData.facebook)) {
                     try {
                         console.log('Response as formatted message');
