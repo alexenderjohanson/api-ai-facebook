@@ -20,7 +20,7 @@ function processEvent(event) {
     var sender = event.sender.id;
 
     if (event.postback) {
-        text = JSON.stringify(messaging_events.postback);
+        text = JSON.stringify(event.postback);
         sendFBMessage(sender, "Postback received: " + text.substring(0, 200));
     } else if (event.message && event.message.text) {
         var text = event.message.text;
@@ -212,7 +212,7 @@ app.post('/webhook/', function (req, res) {
         var messaging_events = req.body.entry[0].messaging;
 
         for (var i = 0; i < messaging_events.length; i++) {
-            var event = req.body.entry[0].messaging[i];
+            var event = messaging_events[i];
             processEvent(event);
         }
 
