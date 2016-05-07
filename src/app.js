@@ -22,7 +22,10 @@ function processEvent(event) {
     if (event.postback) {
         text = JSON.stringify(event.postback);
         console.log("postback text:" + text);
-        sendFBMessage(sender, "Postback received: " + text);
+        var mesageData = {
+            "text": text
+        }
+        sendFBMessage(sender, messageData);
     } else if (event.message && event.message.text) {
         var text = event.message.text;
         // Handle a text message from this sender
@@ -30,10 +33,6 @@ function processEvent(event) {
         if (!sessionIds.has(sender)) {
             sessionIds.set(sender, uuid.v1());
         }
-
-        // contexts.has(sender){
-
-        // }
 
         let apiaiRequest = apiAiService.textRequest(text,
             {
