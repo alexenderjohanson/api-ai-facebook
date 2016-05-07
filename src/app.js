@@ -21,7 +21,6 @@ function processEvent(event) {
 
     if (event.postback) {
         text = JSON.stringify(event.postback);
-        console.log("postback text:" + text);
         let messageData = {
             "text": text
         }
@@ -141,6 +140,9 @@ function chunkString(s, len) {
 }
 
 function sendFBMessage(sender, messageData) {
+    
+    console.log("send fb message:" + JSON.stringify(messageData));
+    
     request({
         url: 'https://graph.facebook.com/v2.6/me/messages',
         qs: { access_token: FB_PAGE_ACCESS_TOKEN },
