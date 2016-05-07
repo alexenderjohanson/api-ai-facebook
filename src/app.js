@@ -24,7 +24,8 @@ function processEvent(event) {
         text = JSON.stringify(event.postback);
         let messageData = {
             "text": text
-        }
+        };
+        console.log("sending postback data");
         sendFBMessage(sender, messageData);
     } else if (event.message && event.message.text) {
         let text = event.message.text;
