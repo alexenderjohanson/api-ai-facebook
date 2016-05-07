@@ -55,6 +55,15 @@ function processEvent(event) {
                 // let contexts = response.result.contexts;
 
                 if (action == "food-ordering" && complete) {
+
+                    let repeatOrder = {
+                        "text": `Let me repeat your order:
+                        Name: ${parameters.name}
+                        Contact: ${parameters.contact}
+                        Address: ${parameters.address}
+                        Food: ${parameters.food}`
+                    }
+
                     let messageData = {
                         "attachment": {
                             "type": "template",
@@ -62,7 +71,6 @@ function processEvent(event) {
                                 "template_type": "generic",
                                 "elements": [{
                                     "title": "Confirm your order",
-                                    "subtitle": JSON.stringify(parameters),
                                     "buttons": [
                                         {
                                             "type": "postback",
@@ -80,6 +88,7 @@ function processEvent(event) {
                         }
                     };
 
+                    sendFBMessage(sender, repeatOrder);
                     sendFBMessage(sender, messageData);
                 } else if (isDefined(responseData) && isDefined(responseData.facebook)) {
                     try {
