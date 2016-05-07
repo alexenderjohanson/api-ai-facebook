@@ -55,8 +55,8 @@ function processEvent(event) {
         
         let apiaiRequest = apiAiService.textRequest(text,
             {
-                sessionId: sessionIds.get(sender)
-                context: context;
+                sessionId: sessionIds.get(sender),
+                context: context
             });
 
         apiaiRequest.on('response', (response) => {
