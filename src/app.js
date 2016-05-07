@@ -21,7 +21,8 @@ function processEvent(event) {
 
     if (event.postback) {
         text = JSON.stringify(event.postback);
-        sendFBMessage(sender, "Postback received: " + text.substring(0, 200));
+        console.log("postback text:" + text);
+        sendFBMessage(sender, "Postback received: " + text);
     } else if (event.message && event.message.text) {
         var text = event.message.text;
         // Handle a text message from this sender
