@@ -17,6 +17,7 @@ const apiAiService = apiai(APIAI_ACCESS_TOKEN, { language: APIAI_LANG, requestSo
 const sessionIds = new Map();
 const contexts = new Map();
 const userProfiles = new Map();
+const intentParameters = new Map();
 
 function processEvent(event) {
     var sender = event.sender.id;
@@ -45,10 +46,11 @@ function processEvent(event) {
             })
         }
 
-        // let context = null;
-        // if (contexts.has(sender)) {
-        //     context = contexts.get(sender);
-        // }
+        let context = null;
+        if (contexts.has(sender)) {
+            context = contexts.get(sender);
+            contexts.delete(sender);
+        }
 
         // if (context && context.length) {
         //     let name = context[0].name;
@@ -62,7 +64,8 @@ function processEvent(event) {
 
         let apiaiRequest = apiAiService.textRequest(text,
             {
-                sessionId: sessionIds.get(sender)
+                sessionId: sessionIds.get(sender),
+                context: context
             });
 
         apiaiRequest.on('response', (response) => {
@@ -72,15 +75,16 @@ function processEvent(event) {
                 let action = response.result.action;
                 let complete = !response.result.actionIncomplete;
                 let parameters = response.result.parameters;
-                let resultContexts = response.result.contexts;
+                let responseContexts = response.result.contexts;
 
                 // contexts.set(sender, resultContexts);
-
-                if (action == "food-ordering" && complete) {
+                if (action == "get-address" && complete) {
 
                     let userProfile = userProfiles.get(sender);
+                    let orderParameters = intentParameters.get(sender);
+                    
                     let repeatOrder = {
-                        "text": `Let me repeat your order: \nName: ${userProfile.first_name} \nContact: ${parameters.contact} \nAddress: ${parameters.address} \nFood: ${parameters.food}`
+                        "text": `Let me repeat your order: \nName: ${userProfile.first_name} \nContact: ${orderParameters.contact} \nAddress: ${parameters.address} \nFood: ${orderParameters.food}`
                     }
 
                     let messageData = {
@@ -109,6 +113,12 @@ function processEvent(event) {
 
                     sendFBMessage(sender, repeatOrder);
                     sendFBMessage(sender, messageData);
+
+                } else if (action == "food-ordering" && complete) {
+
+                    intentParameters.set(sender, parameters);
+                    contexts.set(sender, responseContexts);
+                    processResponseData(sender, responseData);
                 } else if (isDefined(responseData) && isDefined(responseData.facebook)) {
                     try {
                         console.log('Response as formatted message');
@@ -132,6 +142,17 @@ function processEvent(event) {
 
         apiaiRequest.on('error', (error) => console.error(error));
         apiaiRequest.end();
+    }
+}
+
+function processResponseData(sender, responseData) {
+    if (isDefined(responseData) && isDefined(responseData.facebook)) {
+        try {
+            console.log('Response as formatted message');
+            sendFBMessage(sender, responseData.facebook);
+        } catch (err) {
+            sendFBMessage(sender, { text: err.message });
+        }
     }
 }
 
