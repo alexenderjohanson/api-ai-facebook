@@ -155,6 +155,9 @@ function processEvent(event) {
 }
 
 function processResponseData(sender, responseData) {
+    
+    console.log(responseData);
+    
     if (isDefined(responseData) && isDefined(responseData.facebook)) {
         try {
             console.log('Response as formatted message');
