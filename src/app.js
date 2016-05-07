@@ -39,10 +39,24 @@ function processEvent(event) {
         if (!sessionIds.has(sender)) {
             sessionIds.set(sender, uuid.v1());
         }
-
+        
+        let context = null;
+        if(contexts.has(sender)){
+            context = contexts.get(sender);
+        }
+        
+        if(context && context.length){
+            let name = context[0].name;
+            
+            if(name == "jom_makan_dialog_params_address"){
+                context[0].parameters.address;
+            }
+        }
+        
         let apiaiRequest = apiAiService.textRequest(text,
             {
                 sessionId: sessionIds.get(sender)
+                context: context;
             });
 
         apiaiRequest.on('response', (response) => {
@@ -52,16 +66,14 @@ function processEvent(event) {
                 let action = response.result.action;
                 let complete = !response.result.actionIncomplete;
                 let parameters = response.result.parameters;
-                // let contexts = response.result.contexts;
+                let resultContexts = response.result.contexts;
+                
+                contexts.set(sender, resultContexts);
 
                 if (action == "food-ordering" && complete) {
 
                     let repeatOrder = {
-                        "text": `Let me repeat your order:
-                        Name: ${parameters.name}
-                        Contact: ${parameters.contact}
-                        Address: ${parameters.address}
-                        Food: ${parameters.food}`
+                        "text": `Let me repeat your order: \nName: ${parameters.name} \nContact: ${parameters.contact} \nAddress: ${parameters.address} \nFood: ${parameters.food}`
                     }
 
                     let messageData = {
@@ -70,7 +82,7 @@ function processEvent(event) {
                             "payload": {
                                 "template_type": "generic",
                                 "elements": [{
-                                    "title": "Confirm your order",
+                                    "title": "Confirm your order?",
                                     "buttons": [
                                         {
                                             "type": "postback",
@@ -156,8 +168,6 @@ function chunkString(s, len) {
 }
 
 function sendFBMessage(sender, messageData) {
-
-    console.log("send fb message:" + JSON.stringify(messageData));
 
     request({
         url: 'https://graph.facebook.com/v2.6/me/messages',
