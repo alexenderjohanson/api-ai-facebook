@@ -64,22 +64,7 @@ function processEvent(event) {
                                         },
                                         {
                                             "type": "postback",
-                                            "title": "Edit address",
-                                            "payload": "Payload for first element in a generic bubble",
-                                        },
-                                        {
-                                            "type": "postback",
-                                            "title": "Edit contact number",
-                                            "payload": "Payload for first element in a generic bubble",
-                                        },
-                                        {
-                                            "type": "postback",
-                                            "title": "Edit name",
-                                            "payload": "Payload for first element in a generic bubble",
-                                        },
-                                        {
-                                            "type": "postback",
-                                            "title": "Edit food",
+                                            "title": "Edit order",
                                             "payload": "Payload for first element in a generic bubble",
                                         }
                                     ],
