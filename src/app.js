@@ -19,7 +19,10 @@ const contexts = new Map();
 function processEvent(event) {
     var sender = event.sender.id;
 
-    if (event.message && event.message.text) {
+    if (event.postback) {
+        text = JSON.stringify(messaging_events.postback);
+        sendFBMessage(sender, "Postback received: " + text.substring(0, 200));
+    } else if (event.message && event.message.text) {
         var text = event.message.text;
         // Handle a text message from this sender
 
@@ -208,14 +211,9 @@ app.post('/webhook/', function (req, res) {
     try {
         var messaging_events = req.body.entry[0].messaging;
 
-        if (messaging_events.postback) {
-            text = JSON.stringify(messaging_events.postback);
-            sendFBMessage(sender, "Postback received: " + text.substring(0, 200));
-        } else {
-            for (var i = 0; i < messaging_events.length; i++) {
-                var event = req.body.entry[0].messaging[i];
-                processEvent(event);
-            }
+        for (var i = 0; i < messaging_events.length; i++) {
+            var event = req.body.entry[0].messaging[i];
+            processEvent(event);
         }
 
         return res.status(200).json({
