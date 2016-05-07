@@ -22,12 +22,12 @@ function processEvent(event) {
     if (event.postback) {
         text = JSON.stringify(event.postback);
         console.log("postback text:" + text);
-        var mesageData = {
+        let messageData = {
             "text": text
         }
         sendFBMessage(sender, messageData);
     } else if (event.message && event.message.text) {
-        var text = event.message.text;
+        let text = event.message.text;
         // Handle a text message from this sender
 
         if (!sessionIds.has(sender)) {
