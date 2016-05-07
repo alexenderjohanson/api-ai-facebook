@@ -28,9 +28,9 @@ function processEvent(event) {
         }
 
         console.log("Text", text);
-        
+
         // contexts.has(sender){
-            
+
         // }
 
         let apiaiRequest = apiAiService.textRequest(text,
@@ -43,9 +43,44 @@ function processEvent(event) {
                 let responseText = response.result.fulfillment.speech;
                 let responseData = response.result.fulfillment.data;
                 let action = response.result.action;
+                let complete = response.result.actionIncomplete;
                 // let contexts = response.result.contexts;
-                
-                if (isDefined(responseData) && isDefined(responseData.facebook)) {
+
+                if (action == "food-ordering" && complete) {
+                    let messageData = {
+                        "attachment": {
+                            "type": "template",
+                            "payload": {
+                                "template_type": "generic",
+                                "elements": [{
+                                    "title": "First card",
+                                    "subtitle": "Element #1 of an hscroll",
+                                    "image_url": "http://messengerdemo.parseapp.com/img/rift.png",
+                                    "buttons": [{
+                                        "type": "web_url",
+                                        "url": "https://www.messenger.com/",
+                                        "title": "Web url"
+                                    }, {
+                                            "type": "postback",
+                                            "title": "Postback",
+                                            "payload": "Payload for first element in a generic bubble",
+                                        }],
+                                }, {
+                                        "title": "Second card",
+                                        "subtitle": "Element #2 of an hscroll",
+                                        "image_url": "http://messengerdemo.parseapp.com/img/gearvr.png",
+                                        "buttons": [{
+                                            "type": "postback",
+                                            "title": "Postback",
+                                            "payload": "Payload for second element in a generic bubble",
+                                        }],
+                                    }]
+                            }
+                        }
+                    };
+
+                    sendFBMessage(sender, messageData);
+                } else if (isDefined(responseData) && isDefined(responseData.facebook)) {
                     try {
                         console.log('Response as formatted message');
                         sendFBMessage(sender, responseData.facebook);
