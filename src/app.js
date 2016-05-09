@@ -118,7 +118,7 @@ function processEvent(event) {
                             }
                         };
 
-                        sendFBMessage(sender, repeatOrder);
+                        // sendFBMessage(sender, repeatOrder);
                         sendFBMessage(sender, messageData);
                     } catch (err) {
                         sendFBMessage(sender, { text: err.message });
