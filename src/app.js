@@ -26,12 +26,12 @@ function processEvent(event) {
     if (event.postback) {
 
         try {
-            let text = handlePostback(event.postback);
-            let messageData = {
-                "text": text
-            };
+            let response = handlePostback(event.postback);
+            // let messageData = {
+            //     "text": text
+            // };
             console.log("sending postback data");
-            sendFBMessage(sender, messageData);
+            sendFBMessage(sender, response);
         } catch (err) {
             console.log(err)
         }
@@ -93,11 +93,11 @@ function processEvent(event) {
 
                         let contextParameters = foodOrderingContext.parameters;
                         let repeatOrder = `Let me repeat your order: \nName: ${userProfile.first_name} \nContact: ${contextParameters.contact} \nAddress: ${contextParameters.address} \nFood: ${contextParameters.food}`
-                        
+
                         let order = Object.assign({}, userProfile, foodOrderingContext.parameters);
                         orders.set(sender, order);
                         console.log(order);
-                         
+
                         let messageData = {
                             "attachment": {
                                 "type": "template",
@@ -286,9 +286,73 @@ function isDefined(obj) {
     return obj != null;
 }
 
-function handlePostback(payload) {
-    let text = JSON.stringify(payload);
-    return text;
+function handlePostback(sender, payload) {
+
+    if (payload.payload == "confirm-order") {
+        let order = orders.get(sender);
+
+        // let f = {
+        //     first_name: 'Johanson',
+        //     last_name: 'Chew',
+        //     profile_pic: 'https://scontent.xx.fbcdn.net/v/t1.0-1/p200x200/1377497_10151773468449760_1886125195_n.jpg?oh=ce45faea2d5661b6004fc6cedf71b4a3&oe=57E64824',
+        //     locale: 'en_GB',
+        //     timezone: 8,
+        //     gender: 'male',
+        //     food: 'Roti Canai',
+        //     contact: '0129813030', address: '12 dsjfskj skdjf'
+        // }
+
+        let response = {
+            "attachment": {
+                "type": "template",
+                "payload": {
+                    "template_type": "receipt",
+                    "recipient_name": order.first_name + order.last_name,
+                    "order_number": "12345678902",
+                    "currency": "MYR",
+                    "payment_method": "Billplz",
+                    "order_url": "http://petersapparel.parseapp.com/order?order_id=123456",
+                    "timestamp": "1428444852",
+                    "elements": [
+                        {
+                            "title": "Food order",
+                            "subtitle": order.food,
+                            "price": 50,
+                            "currency": "MYR",
+                        },
+                    ],
+                    "address": {
+                        "street_1": "1 Hacker Way",
+                        "street_2": "",
+                        "city": "Menlo Park",
+                        "postal_code": "94025",
+                        "state": "CA",
+                        "country": "US"
+                    },
+                    "summary": {
+                        "subtotal": 75.00,
+                        "shipping_cost": 4.95,
+                        "total_tax": 6.19,
+                        "total_cost": 56.14
+                    },
+                    "adjustments": [
+                        {
+                            "name": "New Customer Discount",
+                            "amount": 20
+                        },
+                        {
+                            "name": "$10 Off Coupon",
+                            "amount": 10
+                        }
+                    ]
+                }
+            }
+        }
+
+        return response;
+    }
+    // let text = JSON.stringify(payload);
+
 }
 
 const app = express();
