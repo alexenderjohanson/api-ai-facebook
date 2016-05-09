@@ -90,11 +90,9 @@ function processEvent(event) {
                     try {
                         let userProfile = userProfiles.get(sender);
 
-                        let repeatOrder = {
-                            "text": `Let me repeat your order: \nName: ${userProfile.first_name} \nContact: ${foodOrderingContext.contact} \nAddress: ${foodOrderingContext.address} \nFood: ${foodOrderingContext.food}`
-                        }
+                        let confirmText = `Let me repeat your order: \nName: ${userProfile.first_name} \nContact: ${foodOrderingContext.contact} \nAddress: ${foodOrderingContext.address} \nFood: ${foodOrderingContext.food}\nConfirm?`
                         
-                        let payload = Object.assign(userProfile, foodOrderingContext);
+                        let payload = Object.assign({}, userProfile, foodOrderingContext);
 
                         let messageData = {
                             "attachment": {
@@ -102,7 +100,7 @@ function processEvent(event) {
                                 "payload": {
                                     "template_type": "generic",
                                     "elements": [{
-                                        "title": "Confirm your order?",
+                                        "title": confirmText,
                                         "buttons": [
                                             {
                                                 "type": "postback",
