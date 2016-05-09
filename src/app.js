@@ -6,6 +6,7 @@ const bodyParser = require('body-parser');
 const uuid = require('node-uuid');
 const request = require('request');
 const fetch = require('node-fetch');
+const _ = require('lodash');
 
 const REST_PORT = (process.env.PORT || 5000);
 const APIAI_ACCESS_TOKEN = process.env.APIAI_ACCESS_TOKEN;
@@ -25,8 +26,7 @@ function processEvent(event) {
     if (event.postback) {
 
         try {
-            console.log("postback:" + event.postback);
-            let text = JSON.stringify(event.postback);
+            let text = handlePostback(event.postback);
             let messageData = {
                 "text": text
             };
@@ -80,13 +80,21 @@ function processEvent(event) {
                 // contexts.set(sender, resultContexts);
                 if (action == "get-address" && complete) {
 
+                    let foodOrderingContext = _.find(responseContexts, { "name": "food-ordering" });
+
+                    if (!foodOrderingContext) {
+                        sendFBMessageText(sender, "Whoops, we lost your order in the matrix. Neo is on it.");
+                        return;
+                    }
+
                     try {
                         let userProfile = userProfiles.get(sender);
-                        let orderParameters = intentParameters.get(sender);
 
                         let repeatOrder = {
-                            "text": `Let me repeat your order: \nName: ${userProfile.first_name} \nContact: ${orderParameters.contact} \nAddress: ${parameters.address} \nFood: ${orderParameters.food}`
+                            "text": `Let me repeat your order: \nName: ${userProfile.first_name} \nContact: ${foodOrderingContext.contact} \nAddress: ${foodOrderingContext.address} \nFood: ${foodOrderingContext.food}`
                         }
+                        
+                        let payload = Object.assign(userProfile, foodOrderingContext);
 
                         let messageData = {
                             "attachment": {
@@ -98,7 +106,7 @@ function processEvent(event) {
                                         "buttons": [
                                             {
                                                 "type": "postback",
-                                                "payload": JSON.stringify(parameters),
+                                                "payload": JSON.stringify(payload),
                                                 "title": "Confirm"
                                             },
                                             {
@@ -156,7 +164,6 @@ function processEvent(event) {
 function processResponseData(sender, responseData, responseText) {
 
     console.log(responseData);
-
 
     if (isDefined(responseData) && isDefined(responseData.facebook)) {
         try {
@@ -246,6 +253,13 @@ function sendFBMessage(sender, messageData) {
     });
 }
 
+function sendFBMessageText(sender, messageText) {
+    let messageData = {
+        "text": messageText
+    };
+    sendFBMessage(sender, messageData);
+}
+
 function doSubscribeRequest() {
     request({
         method: 'POST',
@@ -270,6 +284,11 @@ function isDefined(obj) {
     }
 
     return obj != null;
+}
+
+function handlePostback(payload) {
+    let text = JSON.stringify(payload);
+    return text;
 }
 
 const app = express();
