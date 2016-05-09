@@ -18,7 +18,7 @@ const apiAiService = apiai(APIAI_ACCESS_TOKEN, { language: APIAI_LANG, requestSo
 const sessionIds = new Map();
 const contexts = new Map();
 const userProfiles = new Map();
-const intentParameters = new Map();
+const orders = new Map();
 
 function processEvent(event) {
     var sender = event.sender.id;
@@ -92,8 +92,9 @@ function processEvent(event) {
 
                         let repeatOrder = `Let me repeat your order: \nName: ${userProfile.first_name} \nContact: ${foodOrderingContext.contact} \nAddress: ${foodOrderingContext.address} \nFood: ${foodOrderingContext.food}`
                         
-                        let payload = Object.assign({}, userProfile, foodOrderingContext);
-                        console.log(payload);
+                        let order = Object.assign({}, userProfile, foodOrderingContext.parameters);
+                        orders.set(sender, order);
+                        console.log(order);
                          
                         let messageData = {
                             "attachment": {
@@ -105,7 +106,7 @@ function processEvent(event) {
                                         "buttons": [
                                             {
                                                 "type": "postback",
-                                                "payload": JSON.stringify(payload),
+                                                "payload": "confirm-order",
                                                 "title": "Confirm"
                                             },
                                             {
@@ -119,7 +120,7 @@ function processEvent(event) {
                             }
                         };
 
-                        sendFBMessage(sender, repeatOrder);
+                        sendFBMessageText(sender, repeatOrder);
                         sendFBMessage(sender, messageData);
                     } catch (err) {
                         sendFBMessage(sender, { text: err.message });
@@ -129,8 +130,6 @@ function processEvent(event) {
 
                     try {
                         processResponseData(sender, responseData, responseText);
-                        intentParameters.set(sender, parameters);
-                        contexts.set(sender, responseContexts);
                     } catch (err) {
                         sendFBMessage(sender, { text: err.message });
                     }
