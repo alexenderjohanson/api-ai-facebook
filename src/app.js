@@ -26,7 +26,7 @@ function processEvent(event) {
     if (event.postback) {
 
         try {
-            let response = handlePostback(event.postback.payload);
+            let response = handlePostback(sender, event.postback.payload);
             // let messageData = {
             //     "text": text
             // };
