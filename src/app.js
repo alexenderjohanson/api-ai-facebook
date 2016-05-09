@@ -301,6 +301,8 @@ function handlePostback(sender, payload) {
         //     food: 'Roti Canai',
         //     contact: '0129813030', address: '12 dsjfskj skdjf'
         // }
+        
+        console.log(order);
 
         let response = {
             "attachment": {
