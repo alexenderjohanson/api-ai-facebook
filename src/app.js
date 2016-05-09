@@ -26,7 +26,7 @@ function processEvent(event) {
     if (event.postback) {
 
         try {
-            let response = handlePostback(event.postback);
+            let response = handlePostback(event.postback.payload);
             // let messageData = {
             //     "text": text
             // };
@@ -288,7 +288,7 @@ function isDefined(obj) {
 
 function handlePostback(sender, payload) {
 
-    if (payload.payload == "confirm-order") {
+    if (payload == "confirm-order") {
         let order = orders.get(sender);
 
         // let f = {
