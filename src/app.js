@@ -90,18 +90,18 @@ function processEvent(event) {
                     try {
                         let userProfile = userProfiles.get(sender);
 
-                        let confirmText = `Let me repeat your order: \nName: ${userProfile.first_name} \nContact: ${foodOrderingContext.contact} \nAddress: ${foodOrderingContext.address} \nFood: ${foodOrderingContext.food}`
+                        let repeatOrder = `Let me repeat your order: \nName: ${userProfile.first_name} \nContact: ${foodOrderingContext.contact} \nAddress: ${foodOrderingContext.address} \nFood: ${foodOrderingContext.food}`
                         
                         let payload = Object.assign({}, userProfile, foodOrderingContext);
-
+                        console.log(payload);
+                         
                         let messageData = {
                             "attachment": {
                                 "type": "template",
                                 "payload": {
                                     "template_type": "generic",
                                     "elements": [{
-                                        "title": "Confirm your order",
-                                        "subtitle":confirmText,
+                                        "title": "Confirm your order above?",
                                         "buttons": [
                                             {
                                                 "type": "postback",
@@ -119,7 +119,7 @@ function processEvent(event) {
                             }
                         };
 
-                        // sendFBMessage(sender, repeatOrder);
+                        sendFBMessage(sender, repeatOrder);
                         sendFBMessage(sender, messageData);
                     } catch (err) {
                         sendFBMessage(sender, { text: err.message });
