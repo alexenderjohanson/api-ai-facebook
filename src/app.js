@@ -81,7 +81,7 @@ function processEvent(event) {
                 if (action == "get-address" && complete) {
 
                     let foodOrderingContext = _.find(responseContexts, { "name": "food-ordering" });
-                    console.log("foodOrderingContext": JSON.stringify(foodOrderingContext));
+                    console.log("foodOrderingContext:" + JSON.stringify(foodOrderingContext));
 
                     if (!foodOrderingContext) {
                         sendFBMessageText(sender, "Whoops, we lost your order in the matrix. Neo is on it.");
