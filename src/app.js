@@ -91,7 +91,8 @@ function processEvent(event) {
                     try {
                         let userProfile = userProfiles.get(sender);
 
-                        let repeatOrder = `Let me repeat your order: \nName: ${userProfile.first_name} \nContact: ${foodOrderingContext.contact} \nAddress: ${foodOrderingContext.address} \nFood: ${foodOrderingContext.food}`
+                        let contextParameters = foodOrderingContext.parameters;
+                        let repeatOrder = `Let me repeat your order: \nName: ${userProfile.first_name} \nContact: ${contextParameters.contact} \nAddress: ${contextParameters.address} \nFood: ${contextParameters.food}`
                         
                         let order = Object.assign({}, userProfile, foodOrderingContext.parameters);
                         orders.set(sender, order);
