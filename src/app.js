@@ -302,7 +302,11 @@ function handlePostback(sender, payload) {
         //     contact: '0129813030', address: '12 dsjfskj skdjf'
         // }
         
-        console.log(order);
+        if(!order){
+             return {
+                 "text":"This order is expired" 
+             } 
+        }
 
         let response = {
             "attachment": {
