@@ -404,17 +404,17 @@ function handlePostback(sender, payload) {
 
         // let text = JSON.stringify(payload);
     } else if (payload == "use-existing-address") {
-        let response {
+        response = {
             "recur": true;
             "text": addresses.get(sender);
         }
 
     } else if (payload == "enter-new-address") {
-        let response {
+        response = {
             "text": "Please enter new address";
         }
     }
-    
+
     return response;
 }
 
