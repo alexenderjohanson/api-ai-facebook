@@ -7,6 +7,7 @@ const uuid = require('node-uuid');
 const request = require('request');
 const fetch = require('node-fetch');
 const _ = require('lodash');
+const moment = require('moment');
 
 const REST_PORT = (process.env.PORT || 5000);
 const APIAI_ACCESS_TOKEN = process.env.APIAI_ACCESS_TOKEN;
@@ -19,6 +20,7 @@ const sessionIds = new Map();
 const contexts = new Map();
 const userProfiles = new Map();
 const orders = new Map();
+const addresses = new Map();
 
 function processEvent(event) {
     var sender = event.sender.id;
@@ -27,11 +29,14 @@ function processEvent(event) {
 
         try {
             let response = handlePostback(sender, event.postback.payload);
-            // let messageData = {
-            //     "text": text
-            // };
-            console.log("sending postback data");
-            sendFBMessage(sender, response);
+
+            if (response.recur) {
+                event.postback = undefined;
+                event.message = response;
+            } else {
+                console.log("sending postback data");
+                sendFBMessage(sender, response);
+            }
         } catch (err) {
             console.log(err)
         }
@@ -76,12 +81,17 @@ function processEvent(event) {
                 let complete = !response.result.actionIncomplete;
                 let parameters = response.result.parameters;
                 let responseContexts = response.result.contexts;
+                let userProfile = userProfiles.get(sender);
 
                 // contexts.set(sender, resultContexts);
-                if (action == "get-address" && complete) {
+                if (action == "get-user" && complete) {
+
+                    sendFBMessageText(`Name:${userProfile.first_name}\nGender:${userProfile.gender}\nTime zone:${userProfile.timezone}`);
+
+                } else if (action == "get-address" && complete) {
 
                     let foodOrderingContext = _.find(responseContexts, { "name": "food-ordering" });
-                    console.log("foodOrderingContext:" + JSON.stringify(foodOrderingContext));
+                    // console.log("foodOrderingContext:" + JSON.stringify(foodOrderingContext));
 
                     if (!foodOrderingContext) {
                         sendFBMessageText(sender, "Whoops, we lost your order in the matrix. Neo is on it.");
@@ -89,14 +99,16 @@ function processEvent(event) {
                     }
 
                     try {
-                        let userProfile = userProfiles.get(sender);
-
                         let contextParameters = foodOrderingContext.parameters;
+
+                        //add address to address book
+                        addresses.set(sender, foodOrderingContext.address);
+
                         let repeatOrder = `Let me repeat your order: \nName: ${userProfile.first_name} \nContact: ${contextParameters.contact} \nAddress: ${contextParameters.address} \nFood: ${contextParameters.food}`
 
                         let order = Object.assign({}, userProfile, foodOrderingContext.parameters);
                         orders.set(sender, order);
-                        console.log(order);
+                        // console.log(order);
 
                         let messageData = {
                             "attachment": {
@@ -113,8 +125,8 @@ function processEvent(event) {
                                             },
                                             {
                                                 "type": "postback",
-                                                "title": "Edit order",
-                                                "payload": "Payload for first element in a generic bubble",
+                                                "title": "Cancel",
+                                                "payload": "cancel-order",
                                             }
                                         ],
                                     }]
@@ -131,7 +143,37 @@ function processEvent(event) {
                 } else if (action == "food-ordering" && complete) {
 
                     try {
-                        processResponseData(sender, responseData, responseText);
+                        let address = checkExistingAddress(sender);
+
+                        if (address) {
+                            let messageData = {
+                                "attachment": {
+                                    "type": "template",
+                                    "payload": {
+                                        "template_type": "button",
+                                        "text": `Should we deliver to this address address?\n${address}`,
+                                        "elements": [{
+                                            "buttons": [
+                                                {
+                                                    "type": "postback",
+                                                    "payload": "use-existing-address",
+                                                    "title": "Yes"
+                                                },
+                                                {
+                                                    "type": "postback",
+                                                    "title": "Cancel",
+                                                    "payload": "enter-new-address",
+                                                }
+                                            ],
+                                        }]
+                                    }
+                                }
+                            };
+
+                            sendFBMessage(sender, messageData);
+                        } else {
+                            processResponseData(sender, responseData, responseText);
+                        }
                     } catch (err) {
                         sendFBMessage(sender, { text: err.message });
                     }
@@ -288,9 +330,10 @@ function isDefined(obj) {
 
 function handlePostback(sender, payload) {
 
+    let response = {};
     if (payload == "confirm-order") {
         let order = orders.get(sender);
-
+        orders.delete(sender);
         // let f = {
         //     first_name: 'Johanson',
         //     last_name: 'Chew',
@@ -301,14 +344,14 @@ function handlePostback(sender, payload) {
         //     food: 'Roti Canai',
         //     contact: '0129813030', address: '12 dsjfskj skdjf'
         // }
-        
-        if(!order){
-             return {
-                 "text":"This order is expired" 
-             } 
+
+        if (!order) {
+            return {
+                "text": "This order is expired. Please start a new order."
+            }
         }
 
-        let response = {
+        response = {
             "attachment": {
                 "type": "template",
                 "payload": {
@@ -318,7 +361,7 @@ function handlePostback(sender, payload) {
                     "currency": "MYR",
                     "payment_method": "Billplz",
                     "order_url": "http://petersapparel.parseapp.com/order?order_id=123456",
-                    "timestamp": "1428444852",
+                    "timestamp": moment().seconds(),
                     "elements": [
                         {
                             "title": "Food order",
@@ -356,9 +399,23 @@ function handlePostback(sender, payload) {
         }
 
         return response;
-    }
-    // let text = JSON.stringify(payload);
+    } else if (payload == "service-list") {
 
+
+        // let text = JSON.stringify(payload);
+    } else if (payload == "use-existing-address") {
+        let response {
+            "recur": true;
+            "text": addresses.get(sender);
+        }
+
+    } else if (payload == "enter-new-address") {
+        let response {
+            "text": "Please enter new address";
+        }
+    }
+    
+    return response;
 }
 
 const app = express();
