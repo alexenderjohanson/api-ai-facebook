@@ -144,7 +144,7 @@ function processEvent(event) {
 
                     try {
                         let address = addresses.get(sender);
-                        
+
                         console.log("address" + address);
 
                         if (address) {
@@ -154,20 +154,18 @@ function processEvent(event) {
                                     "payload": {
                                         "template_type": "button",
                                         "text": `Should we deliver to this address address?\n${address}`,
-                                        "elements": [{
-                                            "buttons": [
-                                                {
-                                                    "type": "postback",
-                                                    "payload": "use-existing-address",
-                                                    "title": "Yes"
-                                                },
-                                                {
-                                                    "type": "postback",
-                                                    "title": "Cancel",
-                                                    "payload": "enter-new-address",
-                                                }
-                                            ],
-                                        }]
+                                        "buttons": [
+                                            {
+                                                "type": "postback",
+                                                "payload": "use-existing-address",
+                                                "title": "Yes"
+                                            },
+                                            {
+                                                "type": "postback",
+                                                "title": "No",
+                                                "payload": "enter-new-address",
+                                            }
+                                        ],
                                     }
                                 }
                             };
