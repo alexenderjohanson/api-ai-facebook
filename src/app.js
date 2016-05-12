@@ -87,7 +87,7 @@ function processEvent(event) {
                 // contexts.set(sender, resultContexts);
                 if (action == "get-user" && complete) {
 
-                    sendFBMessageText(`Name:${userProfile.first_name}\nGender:${userProfile.gender}\nTime zone:${userProfile.timezone}`);
+                    sendFBMessageText(sender, `Name:${userProfile.first_name}\nGender:${userProfile.gender}\nTime zone:${userProfile.timezone}`);
 
                 } else if (action == "get-address" && complete) {
 
