@@ -405,13 +405,13 @@ function handlePostback(sender, payload) {
         // let text = JSON.stringify(payload);
     } else if (payload == "use-existing-address") {
         response = {
-            "recur": true;
-            "text": addresses.get(sender);
+            "recur": true,
+            "text": addresses.get(sender)
         }
 
     } else if (payload == "enter-new-address") {
         response = {
-            "text": "Please enter new address";
+            "text": "Please enter new address"
         }
     }
 
