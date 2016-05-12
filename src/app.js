@@ -144,6 +144,8 @@ function processEvent(event) {
 
                     try {
                         let address = addresses.get(sender);
+                        
+                        console.log(address);
 
                         if (address) {
                             let messageData = {
