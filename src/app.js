@@ -143,7 +143,7 @@ function processEvent(event) {
                 } else if (action == "food-ordering" && complete) {
 
                     try {
-                        let address = checkExistingAddress(sender);
+                        let address = addresses.get(sender);
 
                         if (address) {
                             let messageData = {
