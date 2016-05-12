@@ -102,7 +102,7 @@ function processEvent(event) {
                         let contextParameters = foodOrderingContext.parameters;
 
                         //add address to address book
-                        addresses.set(sender, foodOrderingContext.address);
+                        addresses.set(sender, contextParameters.address);
 
                         let repeatOrder = `Let me repeat your order: \nName: ${userProfile.first_name} \nContact: ${contextParameters.contact} \nAddress: ${contextParameters.address} \nFood: ${contextParameters.food}`
 
@@ -145,7 +145,7 @@ function processEvent(event) {
                     try {
                         let address = addresses.get(sender);
                         
-                        console.log(address);
+                        console.log("address" + address);
 
                         if (address) {
                             let messageData = {
