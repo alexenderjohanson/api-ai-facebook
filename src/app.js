@@ -424,7 +424,7 @@ function handlePostback(sender, payload) {
     return response;
 }
 
-var app = require('./config/express')();//(db);
+var app = require('./config/express')();
 
 app.get('/webhook/', function (req, res) {
     if (req.query['hub.verify_token'] == FB_VERIFY_TOKEN) {
