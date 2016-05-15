@@ -1,13 +1,13 @@
 'use strict';
 
 const apiai = require('apiai');
-const express = require('express');
 const bodyParser = require('body-parser');
 const uuid = require('node-uuid');
 const request = require('request');
 const fetch = require('node-fetch');
 const _ = require('lodash');
 const moment = require('moment');
+const postcode = require('./controller/postcode');
 
 const REST_PORT = (process.env.PORT || 5000);
 const APIAI_ACCESS_TOKEN = process.env.APIAI_ACCESS_TOKEN;
@@ -88,6 +88,11 @@ function processEvent(event) {
                 if (action == "get-user" && complete) {
 
                     sendFBMessageText(sender, `Name: ${userProfile.first_name} ${userProfile.last_name}\nGender: ${userProfile.gender}\nTime zone: ${userProfile.timezone}`);
+
+                } else if (action == "postcode-verification" && !complete){
+                    
+                    let result = postcode.validatePostcode(parameters);
+                    console.log(result)
 
                 } else if (action == "get-address" && complete) {
 
@@ -419,13 +424,7 @@ function handlePostback(sender, payload) {
     return response;
 }
 
-const app = express();
-app.use(bodyParser.json());
-app.all('*', function (req, res, next) {
-    // res.header("Access-Control-Allow-Origin", '*');
-    // res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, content-type, accept");
-    next();
-});
+var app = require('./config/express')();//(db);
 
 app.get('/webhook/', function (req, res) {
     if (req.query['hub.verify_token'] == FB_VERIFY_TOKEN) {
@@ -464,5 +463,8 @@ app.post('/webhook/', function (req, res) {
 app.listen(REST_PORT, function () {
     console.log('Rest service ready on port ' + REST_PORT);
 });
+
+// Expose app
+exports = module.exports = app;
 
 doSubscribeRequest();
