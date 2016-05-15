@@ -5,9 +5,6 @@
  */
 var express = require('express');
 var bodyParser = require('body-parser');
-var config = require('./config');
-var path = require('path');
-var cors = require('cors');
 // var extractUserFromBearerToken = require("../app/middlewares/extractUserFromBearerToken");
 
 module.exports = function () {
