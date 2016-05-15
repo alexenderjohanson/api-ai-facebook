@@ -37,13 +37,13 @@ module.exports = function () {
 
 
     // Assume 404 since no middleware responded
-    app.use(function (req, res) {
-        //res.status(404).render('404', {
-        //    url: req.originalUrl,
-        //    error: 'Not Found'
-        //});
-        res.status(404).json("Api not found");
-    });
+    // app.use(function (req, res) {
+    //     //res.status(404).render('404', {
+    //     //    url: req.originalUrl,
+    //     //    error: 'Not Found'
+    //     //});
+    //     res.status(404).json("Api not found");
+    // });
 
     return app;
 };
