@@ -4,8 +4,7 @@ const postcodeJson = require('../data/postcode');
 const _ = require('lodash');
 
 exports.validatePostcode = function (postcode) {
-
-    console.log(postcode);
+    
     let index = _.findIndex(postcodeJson, { "postcode": postcode });
     
     if(index < 0){

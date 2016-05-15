@@ -93,7 +93,7 @@ function processEvent(event) {
                     
                     let result = postcode.validatePostcode(parameters.postcode);
                     
-                    sendFBMessageText(JSON.stringify(result));
+                    sendFBMessageText(sender, JSON.stringify(result));
                 } else if (action == "get-address" && complete) {
 
                     let foodOrderingContext = _.find(responseContexts, { "name": "food-ordering" });
