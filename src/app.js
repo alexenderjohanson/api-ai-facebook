@@ -428,7 +428,6 @@ const app = require('./config/express')();
 
 app.get('/webhook/', function (req, res) {
     
-    console.log(req);
     if (req.query['hub.verify_token'] == FB_VERIFY_TOKEN) {
         res.send(req.query['hub.challenge']);
 
@@ -441,8 +440,6 @@ app.get('/webhook/', function (req, res) {
 });
 
 app.post('/webhook/', function (req, res) {
-    
-    console.log(req);
 
     try {
         var messaging_events = req.body.entry[0].messaging;
