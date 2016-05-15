@@ -91,7 +91,7 @@ function processEvent(event) {
 
                 } else if (action == "postcode-verification"){
                     
-                    let result = postcode.validatePostcode(parameters);
+                    let result = postcode.validatePostcode(parameters.postcode);
                     console.log(result)
 
                 } else if (action == "get-address" && complete) {
