@@ -89,7 +89,7 @@ function processEvent(event) {
 
                     sendFBMessageText(sender, `Name: ${userProfile.first_name} ${userProfile.last_name}\nGender: ${userProfile.gender}\nTime zone: ${userProfile.timezone}`);
 
-                } else if (action == "postcode-verification" && !complete){
+                } else if (action == "postcode-verification"){
                     
                     let result = postcode.validatePostcode(parameters);
                     console.log(result)
