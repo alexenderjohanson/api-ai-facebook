@@ -92,8 +92,11 @@ function processEvent(event) {
                 } else if (action == "postcode-verification"){
                     
                     let result = postcode.validatePostcode(parameters.postcode);
-                    
-                    sendFBMessageText(sender, JSON.stringify(result));
+                    if(!result){
+                        sendFBMessageText(sender, "Sorry, we don't deliver to that postcode");
+                    } else {
+                        processResponseData(sender, responseData, responseText);
+                    }
                 } else if (action == "get-address" && complete) {
 
                     let foodOrderingContext = _.find(responseContexts, { "name": "food-ordering" });
