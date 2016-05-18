@@ -27,11 +27,8 @@ exports.handle = function (response, sender) {
     
     console.log(parameters);
     
-    let index1 = _.findIndex(responseContexts, { "name": "hpstalk_information_dialog_params_date" })
-    let index2 = _.findIndex(responseContexts, { "name": "hpstalk_information_dialog_params_address1" })
-    
-    console.log(index1);
-    console.log(index2);
+    console.log(_.findIndex(responseContexts, { "name": "hpstalk_information_dialog_params_date" }) >= 0);
+    console.log(_.findIndex(responseContexts, { "name": "hpstalk_information_dialog_params_address1" }) >= 0);
 
     //user currently in date context, means we have postcode already
     if (_.findIndex(responseContexts, { "name": "hpstalk_information_dialog_params_date" }) >= 0) {
