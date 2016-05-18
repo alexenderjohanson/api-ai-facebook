@@ -34,14 +34,14 @@ exports.handle = function (response, sender) {
     console.log(index2);
 
     //user currently in date context, means we have postcode already
-    if (_.findIndex(responseContexts, { "name": "hpstalk_information_dialog_params_date" })) {
+    if (_.findIndex(responseContexts, { "name": "hpstalk_information_dialog_params_date" }) >= 0) {
         let postcodeValidationResult = postcode.validatePostcode(parameters.postcode);
         if (!postcodeValidationResult) {
             fb.sendFBMessageText(sender, "Sorry, your postcode is out of our delivery area. Please try again by typing HPSTALK.");
         } else {
             fb.processResponseData(sender, responseData, responseText);
         }
-    } else if (_.findIndex(responseContexts, { "name": "hpstalk_information_dialog_params_address1" })) {
+    } else if (_.findIndex(responseContexts, { "name": "hpstalk_information_dialog_params_address1" }) >= 0) {
         let dateValidationResult = validateDate(parameters.date)
 
         if (dateValidationResult) {
@@ -52,7 +52,7 @@ exports.handle = function (response, sender) {
         } else {
             fb.sendFBMessageText(sender, "Sorry, your delivery date has to be at least 2 days in advance.");
         }
-    } else if (_.findIndex(responseContexts, { "name": "hpstalk_information_dialog_params_address2" })) {
+    } else if (_.findIndex(responseContexts, { "name": "hpstalk_information_dialog_params_address2" }) >= 0) {
 
     } else {
         fb.processResponseData(sender, responseData, responseText);
