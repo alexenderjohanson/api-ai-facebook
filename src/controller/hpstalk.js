@@ -2,7 +2,7 @@
 
 const hpstalkOption = require("../data/hpstalk");
 const _ = require('lodash');
-const postcode = require('./controller/postcode');
+const postcode = require('./postcode');
 const moment = require('moment');
 const fb = require('./facebook');
 
