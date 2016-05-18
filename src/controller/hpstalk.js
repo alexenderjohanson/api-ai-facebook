@@ -5,6 +5,7 @@ const _ = require('lodash');
 const postcode = require('./postcode');
 const moment = require('moment');
 const fb = require('./facebook/core');
+const cache = require('./cache');
 
 exports.handle = function (response, sender) {
 
@@ -39,7 +40,12 @@ exports.handle = function (response, sender) {
         let dateValidationResult = validateDate(parameters.date)
 
         if (dateValidationResult) {
-            fb.processResponseData(sender, responseData, responseText);            
+            fb.processResponseData(sender, responseData, responseText);    
+            
+            let shortId = cache.generateShortId();
+            hpstalkOption.attachment.payload.elements[0].buttons[1].payload += "-" + shortId;
+            hpstalkOption.attachment.payload.elements[1].buttons[1].payload += "-" + shortId;
+                    
             fb.sendFBMessage(sender, hpstalkOption);
             //delay this delivery until option selected
             // fb.processResponseData(sender, responseData, responseText);
@@ -61,5 +67,5 @@ function validateDate(dateStr) {
         return false;
     }
 
-    return deliveryDate.isAfter(moment().add(2, 'days'));
+    return deliveryDate.isAfter(moment().add(2, 'days')) && deliveryDate.isBefore(moment(2016-5-31));
 }

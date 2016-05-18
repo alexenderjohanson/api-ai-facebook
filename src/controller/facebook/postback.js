@@ -1,6 +1,22 @@
 'use strict';
 
-exports.handle = function(sender, payload) {
+const cache = require("../cache");
+const _ = require("lodash");
+
+exports.handle = function (sender, payload) {
+
+    let split = _.split(payload, "-");
+    payload = split[0];
+
+    //check if this postback is valid
+    let shortid = split[0];
+    let hasShortId = cache.popShortId(shortid);
+
+    if (!hasShortId) {
+        return {
+            "text": "This action no longer valid please start a new request."
+        }
+    }
 
     let response = {};
     if (payload == "confirm-order") {
@@ -68,9 +84,8 @@ exports.handle = function(sender, payload) {
                     ]
                 }
             }
-        }
-
-        return response;
+        };
+        
     } else if (payload == "service-list") {
 
 
@@ -85,7 +100,7 @@ exports.handle = function(sender, payload) {
         response = {
             "text": "Please enter new address"
         }
-    } else if (payload == "hpstalk-option-a" || payload == "hpstalk-option-b"){
+    } else if (payload == "hpstalkOptionA" || payload == "hpstalkOptionB") {
         response = {
             "recur": true,
             "text": payload
