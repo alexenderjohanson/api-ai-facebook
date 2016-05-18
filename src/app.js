@@ -8,7 +8,7 @@ const _ = require('lodash');
 const moment = require('moment');
 const hpstalk = require('./controller/hpstalk');
 const apiaiController = require('./controller/apiai');
-const postback = require('.controller/facebook/postback');
+const postback = require('./controller/facebook/postback');
 
 const appConfig = require('../app');
 const REST_PORT = (process.env.PORT || 5000);
