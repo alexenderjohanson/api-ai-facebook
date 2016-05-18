@@ -43,8 +43,8 @@ exports.handle = function (response, sender) {
             fb.processResponseData(sender, responseData, responseText);    
             
             let shortId = cache.generateShortId();
-            hpstalkOption.attachment.payload.elements[0].buttons[1].payload += "-" + shortId;
-            hpstalkOption.attachment.payload.elements[1].buttons[1].payload += "-" + shortId;
+            hpstalkOption.attachment.payload.elements[0].buttons[1].payload = "hpstalkOptionA" + "-" + shortId;
+            hpstalkOption.attachment.payload.elements[1].buttons[1].payload = "hpstalkOptionB" + "-" + shortId;
                     
             fb.sendFBMessage(sender, hpstalkOption);
             //delay this delivery until option selected
