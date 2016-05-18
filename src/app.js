@@ -91,7 +91,7 @@ function processEvent(event) {
 
                     sendFBMessageText(sender, `Name: ${userProfile.first_name} ${userProfile.last_name}\nGender: ${userProfile.gender}\nTime zone: ${userProfile.timezone}`);
 
-                } else if (_.findIndex(responseContexts, { "name": "hpstalk" })) {
+                } else if (_.findIndex(responseContexts, { "name": "hpstalk" }) >= 0) {
 
                     hpstalk.handle(response, sender);
                 } else if (action == "get-address" && complete) {
