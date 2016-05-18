@@ -7,6 +7,7 @@ const fetch = require('node-fetch');
 const _ = require('lodash');
 const moment = require('moment');
 const hpstalk = require('./controller/hpstalk');
+const apiaiController = require('./controller/apiai');
 
 const appConfig = require('../app');
 const REST_PORT = (process.env.PORT || 5000);
@@ -71,7 +72,8 @@ function processEvent(event) {
         let apiaiRequest = apiAiService.textRequest(text,
             {
                 sessionId: sessionIds.get(sender),
-                context: context
+                context: context,
+                resetContexts: apiaiController.shouldClearContext(text) 
             });
 
         apiaiRequest.on('response', (response) => {
