@@ -42,7 +42,7 @@ exports.handle = function (response, sender) {
         let dateValidationResult = validateDate(parameters.date)
 
         if (dateValidationResult) {
-            
+            fb.processResponseData(sender, responseData, responseText);            
             fb.sendFBMessage(sender, hpstalkOption);
             //delay this delivery until option selected
             // fb.processResponseData(sender, responseData, responseText);

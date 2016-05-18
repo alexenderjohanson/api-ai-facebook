@@ -3,7 +3,6 @@
         "type": "template",
         "payload": {
             "template_type": "generic",
-            "text":"Please select one of the options below",
             "elements": [
                 {
                     "title": "10 carnations bouquet",
