@@ -12,8 +12,9 @@ exports.handle = function (sender, payload) {
     let shortid = split[1];
     let hasShortId = cache.popShortId(shortid);
     
-    // console.log("shortid:" + shortid);
-    // console.log("paylaod: " + payload)
+    console.log("shortid:" + shortid);
+    console.log("paylaod: " + payload);
+    console.log("has shortid: " + hasShortId);
 
     if (!hasShortId) {
         return {
