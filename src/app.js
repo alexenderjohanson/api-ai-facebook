@@ -33,6 +33,7 @@ function processEvent(event) {
             let response = postback.handle(sender, event.postback.payload);
 
             if (response.recur) {
+                response.recur = undefined;
                 event.postback = undefined;
                 event.message = response;
                 processEvent(event);
