@@ -29,23 +29,26 @@ exports.handle = function (response, sender) {
     if (_.findIndex(responseContexts, { "name": "hpstalk_information_dialog_params_date" })) {
         let postcodeValidationResult = postcode.validatePostcode(parameters.postcode);
         if (!postcodeValidationResult) {
-          fb.sendFBMessageText(sender, "Sorry, your postcode is out of our delivery area. Please try again by typing HPSTALK.");
+            fb.sendFBMessageText(sender, "Sorry, your postcode is out of our delivery area. Please try again by typing HPSTALK.");
         } else {
-          fb.processResponseData(sender, responseData, responseText);
+            fb.processResponseData(sender, responseData, responseText);
         }
-    } else if (_.findIndex(responseContexts, { "name": "hpstalk_information_dialog_params_date" })) {
+    } else if (_.findIndex(responseContexts, { "name": "hpstalk_information_dialog_params_address1" })) {
         let dateValidationResult = validateDate(parameters.date)
 
-        if(parameters){
-          fb.processResponseData(sender, responseData, responseText);
+        if (dateValidationResult) {
+            
+            fb.sendFBMessage(sender, hpstalkOption);
+            //delay this delivery until option selected
+            // fb.processResponseData(sender, responseData, responseText);
         } else {
-          fb.sendFBMessageText(sender, "Sorry, your delivery date has to be at least 2 days in advance.");
+            fb.sendFBMessageText(sender, "Sorry, your delivery date has to be at least 2 days in advance.");
         }
+    } else if (_.findIndex(responseContexts, { "name": "hpstalk_information_dialog_params_address2" })) {
+
+    } else {
+        fb.processResponseData(sender, responseData, responseText);
     }
-
-    fb.processResponseData(sender, responseData, responseText);
-
-
 }
 
 function validateDate(dateStr) {
