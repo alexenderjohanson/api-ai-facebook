@@ -14,7 +14,7 @@ exports.handle = function (sender, payload) {
 
     if (!hasShortId) {
         return {
-            "text": "This action no longer valid please start a new request."
+            "text": "This action is no longer valid please start a new request."
         }
     }
 

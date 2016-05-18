@@ -67,5 +67,5 @@ function validateDate(dateStr) {
         return false;
     }
 
-    return deliveryDate.isAfter(moment().add(2, 'days')) && deliveryDate.isBefore(moment(2016-5-31));
+    return deliveryDate.isAfter(moment().add(2, 'days')) && deliveryDate.isBefore(moment("2016-5-31"));
 }
