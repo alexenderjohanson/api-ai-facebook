@@ -56,7 +56,7 @@ function processEvent(event) {
             })
         }
 
-        // let context = null;
+        let context = null;
         // if (contexts.has(sender)) {
         //     context = contexts.get(sender);
         //     contexts.delete(sender);
