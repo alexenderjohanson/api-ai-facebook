@@ -33,7 +33,6 @@ function processEvent(event) {
             let response = postback.handle(sender, event.postback.payload);
 
             if (response.recur) {
-                response.recur = undefined;
                 event.postback = undefined;
                 event.message = response;
                 processEvent(event);
@@ -47,7 +46,7 @@ function processEvent(event) {
     } else if (event.message && event.message.text) {
         let text = event.message.text;
         
-        console.log("user types:" + text);
+        console.log("text:" + text);
         // Handle a text message from this sender
 
         if (!sessionIds.has(sender)) {
