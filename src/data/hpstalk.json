@@ -3,6 +3,7 @@
         "type": "template",
         "payload": {
             "template_type": "generic",
+            "text":"Please select one of the options below",
             "elements": [
                 {
                     "title": "10 carnations bouquet",
@@ -10,8 +11,13 @@
                     "subtitle": "RM59.00",
                     "buttons": [
                         {
+                            "type": "web_url",
+                            "url": "https://www.facebook.com/helprmy/photos/pcb.1701826800081135/1701835560080259/?type=3&theater",
+                            "title": "View Details"
+                        },
+                        {
                             "type": "postback",
-                            "title": "Buy",
+                            "title": "Select",
                             "payload": "option_a"
                         }
                     ]
@@ -22,8 +28,13 @@
                     "subtitle": "Rm65.00",
                     "buttons": [
                         {
+                            "type": "web_url",
+                            "url": "https://www.facebook.com/helprmy/photos/pcb.1701826800081135/1701822580081557/?type=3&theater",
+                            "title": "View Details"
+                        },
+                        {
                             "type": "postback",
-                            "title": "Buy",
+                            "title": "Select",
                             "payload": "option_b"
                         }
                     ]

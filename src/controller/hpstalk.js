@@ -47,7 +47,7 @@ exports.handle = function (response, sender) {
             //delay this delivery until option selected
             // fb.processResponseData(sender, responseData, responseText);
         } else {
-            fb.sendFBMessageText(sender, "Sorry, your delivery date has to be at least 2 days in advance.");
+            fb.sendFBMessageText(sender, "Sorry, your delivery date has to be at least 2 days in advance. Please try again by typing HPSTALK.");
         }
     } else if (_.findIndex(responseContexts, { "name": "hpstalk_information_dialog_params_address2" }) >= 0) {
 
