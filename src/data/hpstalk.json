@@ -1,0 +1,34 @@
+{
+    "attachment": {
+        "type": "template",
+        "payload": {
+            "template_type": "generic",
+            "elements": [
+                {
+                    "title": "10 carnations bouquet",
+                    "image_url": "https://scontent-kul1-1.xx.fbcdn.net/v/t1.0-9/13087295_1701835560080259_6685567727292698672_n.jpg?oh=cd2b43e554d2c9efdbeaf134861ea372&oe=57D29F7A",
+                    "subtitle": "RM59.00",
+                    "buttons": [
+                        {
+                            "type": "postback",
+                            "title": "Buy",
+                            "payload": "option_a"
+                        }
+                    ]
+                },
+                {
+                    "title": "9 red roses bouquet",
+                    "image_url": "https://scontent-kul1-1.xx.fbcdn.net/t31.0-8/13217393_1701822580081557_8112651684345470688_o.jpg",
+                    "subtitle": "Rm65.00",
+                    "buttons": [
+                        {
+                            "type": "postback",
+                            "title": "Buy",
+                            "payload": "option_b"
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+}

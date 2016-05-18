@@ -6,7 +6,7 @@ const request = require('request');
 const fetch = require('node-fetch');
 const _ = require('lodash');
 const moment = require('moment');
-const postcode = require('./controller/postcode');
+const hpstalk = require('./controller/hpstalk');
 
 const appConfig = require('../app');
 const REST_PORT = (process.env.PORT || 5000);
@@ -89,14 +89,9 @@ function processEvent(event) {
 
                     sendFBMessageText(sender, `Name: ${userProfile.first_name} ${userProfile.last_name}\nGender: ${userProfile.gender}\nTime zone: ${userProfile.timezone}`);
 
-                } else if (action == "postcode-verification"){
-                    
-                    let result = postcode.validatePostcode(parameters.postcode);
-                    if(!result){
-                        sendFBMessageText(sender, "Sorry, we don't deliver to that postcode");
-                    } else {
-                        processResponseData(sender, responseData, responseText);
-                    }
+                } else if (_.findIndex(responseContexts, { "name": "hpstalk" })) {
+
+                    hpstalk.handle(response, sender);
                 } else if (action == "get-address" && complete) {
 
                     let foodOrderingContext = _.find(responseContexts, { "name": "food-ordering" });
@@ -334,7 +329,7 @@ function isDefined(obj) {
         return false;
     }
 
-    return obj != null;
+    return obj !== null;
 }
 
 function handlePostback(sender, payload) {
@@ -430,7 +425,7 @@ function handlePostback(sender, payload) {
 const app = require('./config/express')();
 
 app.get('/webhook/', function (req, res) {
-    
+
     if (req.query['hub.verify_token'] == FB_VERIFY_TOKEN) {
         res.send(req.query['hub.challenge']);
 

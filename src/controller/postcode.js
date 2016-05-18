@@ -12,4 +12,4 @@ exports.validatePostcode = function (postcode) {
     }
 
     return postcodeJson[index];
-}
+};
