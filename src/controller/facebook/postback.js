@@ -6,14 +6,14 @@ const _ = require("lodash");
 exports.handle = function (sender, payload) {
 
     let split = _.split(payload, "-");
-    payload = split[0];
+    let action = split[0];
 
     //check if this postback is valid
     let shortid = split[1];
     let hasShortId = cache.popShortId(shortid);
     
-    console.log("shortid:" + shortid);
-    console.log("paylaod: " + payload)
+    // console.log("shortid:" + shortid);
+    // console.log("paylaod: " + payload)
 
     if (!hasShortId) {
         return {
@@ -22,7 +22,7 @@ exports.handle = function (sender, payload) {
     }
 
     let response = {};
-    if (payload == "confirm-order") {
+    if (action == "confirm-order") {
         let order = orders.get(sender);
         orders.delete(sender);
         // let f = {
@@ -89,24 +89,24 @@ exports.handle = function (sender, payload) {
             }
         };
         
-    } else if (payload == "service-list") {
+    } else if (action == "service-list") {
 
 
         // let text = JSON.stringify(payload);
-    } else if (payload == "use-existing-address") {
+    } else if (action == "use-existing-address") {
         response = {
             "recur": true,
             "text": addresses.get(sender)
         }
 
-    } else if (payload == "enter-new-address") {
+    } else if (action == "enter-new-address") {
         response = {
             "text": "Please enter new address"
         }
-    } else if (payload == "hpstalkOptionA" || payload == "hpstalkOptionB") {
+    } else if (action == "hpstalkOptionA" || action == "hpstalkOptionB") {
         response = {
             "recur": true,
-            "text": payload
+            "text": action
         }
     }
 

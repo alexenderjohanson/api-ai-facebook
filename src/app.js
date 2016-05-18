@@ -56,11 +56,11 @@ function processEvent(event) {
             })
         }
 
-        let context = null;
-        if (contexts.has(sender)) {
-            context = contexts.get(sender);
-            contexts.delete(sender);
-        }
+        // let context = null;
+        // if (contexts.has(sender)) {
+        //     context = contexts.get(sender);
+        //     contexts.delete(sender);
+        // }
 
         // if (context && context.length) {
         //     let name = context[0].name;

@@ -26,7 +26,7 @@ exports.handle = function (response, sender) {
     // recipient-contact
     // recipient-name
     
-    console.log(parameters);
+    // console.log(parameters);
 
     //user currently in date context, means we have postcode already
     if (_.findIndex(responseContexts, { "name": "hpstalk_information_dialog_params_date" }) >= 0) {
