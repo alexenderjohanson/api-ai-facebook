@@ -46,6 +46,8 @@ function processEvent(event) {
         }
     } else if (event.message && event.message.text) {
         let text = event.message.text;
+        
+        console.log("user types:" + text);
         // Handle a text message from this sender
 
         if (!sessionIds.has(sender)) {
