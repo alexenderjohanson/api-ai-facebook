@@ -1,7 +1,7 @@
 'use strict';
 
 const NodeCache = require("node-cache");
-let myCache = new NodeCache({ stdTTL: 300, checkperiod: 120 });
+const myCache = new NodeCache({ stdTTL: 300, checkperiod: 120 });
 const shortid = require('shortid');
 
 exports.generateShortId = function () {
@@ -19,6 +19,6 @@ exports.popShortId = function (id) {
         return false; 
     }
     
-    value = myCache.del(id);
+    myCache.del(id);
     return true;
 }
