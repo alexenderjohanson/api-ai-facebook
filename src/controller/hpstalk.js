@@ -26,9 +26,6 @@ exports.handle = function (response, sender) {
     // recipient-name
     
     console.log(parameters);
-    
-    console.log(_.findIndex(responseContexts, { "name": "hpstalk_information_dialog_params_date" }) >= 0);
-    console.log(_.findIndex(responseContexts, { "name": "hpstalk_information_dialog_params_address1" }) >= 0);
 
     //user currently in date context, means we have postcode already
     if (_.findIndex(responseContexts, { "name": "hpstalk_information_dialog_params_date" }) >= 0) {
@@ -38,7 +35,7 @@ exports.handle = function (response, sender) {
         } else {
             fb.processResponseData(sender, responseData, responseText);
         }
-    } else if (_.findIndex(responseContexts, { "name": "hpstalk_information_dialog_params_address1" }) >= 0) {
+    } else if (_.findIndex(responseContexts, { "name": "hpstalk_information_dialog_params_option" }) >= 0) {
         let dateValidationResult = validateDate(parameters.date)
 
         if (dateValidationResult) {
