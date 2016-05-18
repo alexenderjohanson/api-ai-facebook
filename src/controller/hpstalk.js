@@ -4,7 +4,7 @@ const hpstalkOption = require("../data/hpstalk");
 const _ = require('lodash');
 const postcode = require('./postcode');
 const moment = require('moment');
-const fb = require('./facebook');
+const fb = require('./facebook/core');
 
 exports.handle = function (response, sender) {
 

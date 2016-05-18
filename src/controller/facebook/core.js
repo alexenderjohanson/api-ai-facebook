@@ -1,11 +1,11 @@
 'use strict';
 
 const request = require('request');
-const appConfig = require('../../app');
+const appConfig = require('../../../app');
 
 const FB_PAGE_ACCESS_TOKEN = process.env.FB_PAGE_ACCESS_TOKEN || appConfig.env.FB_PAGE_ACCESS_TOKEN;
 
-exports.processResponseData= function(sender, responseData, responseText) {
+exports.processResponseData = function (sender, responseData, responseText) {
 
     console.log(responseData);
 

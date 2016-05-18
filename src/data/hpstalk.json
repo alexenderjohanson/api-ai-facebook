@@ -17,7 +17,7 @@
                         {
                             "type": "postback",
                             "title": "Select",
-                            "payload": "option_a"
+                            "payload": "hpstalk-option-a"
                         }
                     ]
                 },
@@ -34,7 +34,7 @@
                         {
                             "type": "postback",
                             "title": "Select",
-                            "payload": "option_b"
+                            "payload": "hpstalk-option-b"
                         }
                     ]
                 }
