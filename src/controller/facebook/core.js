@@ -7,17 +7,17 @@ const FB_PAGE_ACCESS_TOKEN = process.env.FB_PAGE_ACCESS_TOKEN || appConfig.env.F
 
 exports.processResponseData = function (sender, responseData, responseText) {
 
-    console.log(responseData);
+    // console.log(responseData);
 
     if (isDefined(responseData) && isDefined(responseData.facebook)) {
         try {
-            console.log('Response as formatted message');
+            console.log('Response:' + responseData.facebook);
             sendFBMessage(sender, responseData.facebook);
         } catch (err) {
             sendFBMessage(sender, { text: err.message });
         }
     } else if (isDefined(responseText)) {
-        console.log('Response as text message');
+        console.log('Response:' + responseText);
         // facebook API limit for text length is 320,
         // so we split message if needed
         var splittedText = splitResponse(responseText);
