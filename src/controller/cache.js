@@ -1,12 +1,12 @@
 'use strict';
 
 const NodeCache = require("node-cache");
+const uuid = require('node-uuid');
 const myCache = new NodeCache({ stdTTL: 300, checkperiod: 120 });
-const shortid = require('shortid');
 
 exports.generateShortId = function () {
 
-    const id = shortid.generate();
+    const id = uuid.v1();
     myCache.set(id, true);
 
     return id;
