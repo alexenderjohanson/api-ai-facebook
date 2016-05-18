@@ -9,8 +9,10 @@ exports.handle = function (sender, payload) {
     payload = split[0];
 
     //check if this postback is valid
-    let shortid = split[0];
+    let shortid = split[1];
     let hasShortId = cache.popShortId(shortid);
+    
+    // console.log(shortid);
 
     if (!hasShortId) {
         return {
