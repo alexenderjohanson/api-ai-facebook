@@ -33,9 +33,13 @@ function processEvent(event) {
             let response = postback.handle(sender, event.postback.payload);
 
             if (response.recur) {
-                event.postback = undefined;
-                event.message = response;
-                processEvent(event);
+                
+                console.log(response);
+                
+                let newEvent = event;
+                newEvent.postback = undefined;
+                newEvent.message = response;
+                processEvent(newEvent);
             } else {
                 console.log("sending postback data");
                 sendFBMessage(sender, response);
