@@ -94,7 +94,7 @@ function repeatOrder(sender, parameters) {
     // recipient-contact
     // recipient-name
     
-    let locationResult = postcode.validatePostcode(parameters.postcode);
+    let locationResult = location.validatePostcode(parameters.postcode);
     
     let address = `${parameters.address1}\n${parameters.address2}\n${parameters.postcode}, ${locationResult.city}\n\n`
 
