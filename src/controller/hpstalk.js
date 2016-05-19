@@ -34,7 +34,7 @@ exports.handle = function (response, sender) {
 
     //user currently in date context, means we have postcode already
     if (_.findIndex(responseContexts, { "name": "hpstalk_dialog_params_date" }) >= 0) {
-        let postcodeValidationResult = postcode.validatePostcode(parameters.postcode);
+        let postcodeValidationResult = location.validatePostcode(parameters.postcode);
         if (!postcodeValidationResult) {
             fb.sendFBMessageText(sender, "Sorry, your postcode is out of our delivery area. Please try again by typing HPSTALK.");
         } else {
