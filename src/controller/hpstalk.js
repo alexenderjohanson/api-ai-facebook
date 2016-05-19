@@ -61,11 +61,11 @@ exports.handle = function (response, sender, rawText) {
         } else {
             fb.sendFBMessageText(sender, "Sorry, your delivery date has to be at least 2 days in advance. Please try again another date");
         }
-    } else if (_.findIndex(responseContexts, { "name": "hpstalk_dialog_params_sendername" }) >= 0){
-        
+    } else if (_.findIndex(responseContexts, { "name": "hpstalk_dialog_params_sendername" }) >= 0) {
+
         let messageKey = MESSAGE_KEY + sender;
         cache.put(messageKey, rawText);
-        
+
         fb.processResponseData(sender, responseData, responseText);
     } else if (!actionIncomplete) {
 
@@ -103,13 +103,19 @@ function repeatOrder(sender, parameters) {
 
     let locationResult = location.validatePostcode(parameters.postcode);
 
-    let address = `${parameters.address1}\n${parameters.address2}\n${parameters.postcode}, ${locationResult.city},\n${location.state}\n\n`
+    if (parameters.address2.toLowerCase() == "na") {
+        parameters.address2 = undefined;
+    } else {
+        parameters.address2 = `\n` + parameters.address2 + `,`;
+    }
+
+    let address = `${parameters.address1},${parameters.address2}\n${parameters.postcode}, ${locationResult.city},\n${locationResult.state}\n\n`
     let message = cache.get(MESSAGE_KEY + sender);
 
-    let repeatMessage = `Let me repeat your order\nAddress:${address}Delivery Date: ${parameters.date}\nRecipient Name: ${parameters.recipientName}\nRecipient Contact: ${parameters.recipientContact}\nMessage:\n${message}\nName on card: ${parameters.senderName}`
+    let repeatMessage = `Let me repeat your order\nAddress:\n${address}Delivery Date: ${parameters.date}\nRecipient Name: ${parameters.recipientName}\nRecipient Contact: ${parameters.recipientContact}\nMessage:\n${message}\nName on card: ${parameters.senderName}`
 
     fb.sendFBMessageText(sender, repeatMessage);
 
     let payment = data.payment;
-    fb.sendFBMessage(payment);
+    fb.sendFBMessage(sender, payment);
 }
