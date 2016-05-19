@@ -46,12 +46,16 @@ exports.handle = function (response, sender) {
         if (dateValidationResult) {
             fb.processResponseData(sender, responseData, responseText);
 
+            try{
             let shortId = cache.generateShortId();
             data.options.attachment.payload.elements[0].buttons[1].payload = OPTION_A + "-" + shortId;
             data.options.attachment.payload.elements[1].buttons[1].payload = OPTION_B + "-" + shortId;
 
             console.log(data.options);
             fb.sendFBMessage(sender, data.options);
+            }catch(ex){
+                console.log(ex);
+            }
         } else {
             fb.sendFBMessageText(sender, "Sorry, your delivery date has to be at least 2 days in advance. Please try again by typing HPSTALK.");
         }
