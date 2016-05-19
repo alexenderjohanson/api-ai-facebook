@@ -103,7 +103,7 @@ function repeatOrder(sender, parameters) {
 
     let locationResult = location.validatePostcode(parameters.postcode);
 
-    let address = `${parameters.address1}\n${parameters.address2}\n${parameters.postcode}, ${locationResult.city},\n${location.selangor}\n\n`
+    let address = `${parameters.address1}\n${parameters.address2}\n${parameters.postcode}, ${locationResult.city},\n${location.state}\n\n`
     let message = cache.get(MESSAGE_KEY + sender);
 
     let repeatMessage = `Let me repeat your order\nAddress:${address}Delivery Date: ${parameters.date}\nRecipient Name: ${parameters.recipientName}\nRecipient Contact: ${parameters.recipientContact}\nMessage:\n${message}\nName on card: ${parameters.senderName}`
