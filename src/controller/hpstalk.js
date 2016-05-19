@@ -2,7 +2,7 @@
 
 const data = require("../data/hpstalk");
 const _ = require('lodash');
-const postcode = require('./postcode');
+const location = require('./location');
 const moment = require('moment');
 const fb = require('./facebook/core');
 const cache = require('./cache');
@@ -93,8 +93,12 @@ function repeatOrder(sender, parameters) {
     // postcode
     // recipient-contact
     // recipient-name
+    
+    let locationResult = postcode.validatePostcode(parameters.postcode);
+    
+    let address = `${parameters.address1}\n${parameters.address2}\n${parameters.postcode}, ${locationResult.city}\n\n`
 
-    let message = `Let me repeat your order\nAddress:\n${parameters.address1}\n${parameters.address2}\n${parameters.postcode}\n\nDelivery Date: ${parameters.date}\nRecipient Name: ${parameters.recipientName}\nRecipient Contact: ${parameters.recipientContact}\nMessage: ${parameters.message}\nName on card: ${parameters.senderName}`
+    let message = `Let me repeat your order\nAddress:${address}\nDelivery Date: ${parameters.date}\nRecipient Name: ${parameters.recipientName}\nRecipient Contact: ${parameters.recipientContact}\nMessage: ${parameters.message}\nName on card: ${parameters.senderName}`
 
     fb.sendFBMessageText(sender, message);
 }
