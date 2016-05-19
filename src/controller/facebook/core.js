@@ -5,6 +5,10 @@ const appConfig = require('../../../app');
 
 const FB_PAGE_ACCESS_TOKEN = process.env.FB_PAGE_ACCESS_TOKEN || appConfig.env.FB_PAGE_ACCESS_TOKEN;
 
+exports.forceSend = function(req, res, next){
+    
+};
+
 exports.processResponseData = function (sender, responseData, responseText) {
 
     // console.log(responseData);

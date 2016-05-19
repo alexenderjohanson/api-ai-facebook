@@ -1,44 +1,80 @@
 {
-    "attachment": {
-        "type": "template",
-        "payload": {
-            "template_type": "generic",
-            "elements": [
-                {
-                    "title": "10 carnations bouquet",
-                    "image_url": "https://scontent-kul1-1.xx.fbcdn.net/v/t1.0-9/13087295_1701835560080259_6685567727292698672_n.jpg?oh=cd2b43e554d2c9efdbeaf134861ea372&oe=57D29F7A",
-                    "subtitle": "RM 59.00",
-                    "buttons": [
-                        {
-                            "type": "web_url",
-                            "url": "https://www.facebook.com/helprmy/photos/pcb.1701826800081135/1701835560080259/?type=3&theater",
-                            "title": "View Details"
-                        },
-                        {
-                            "type": "postback",
-                            "title": "Select",
-                            "payload": "hpstalkOptionA"
-                        }
-                    ]
-                },
-                {
-                    "title": "9 red roses bouquet",
-                    "image_url": "https://scontent-kul1-1.xx.fbcdn.net/t31.0-8/13217393_1701822580081557_8112651684345470688_o.jpg",
-                    "subtitle": "RM 65.00",
-                    "buttons": [
-                        {
-                            "type": "web_url",
-                            "url": "https://www.facebook.com/helprmy/photos/pcb.1701826800081135/1701822580081557/?type=3&theater",
-                            "title": "View Details"
-                        },
-                        {
-                            "type": "postback",
-                            "title": "Select",
-                            "payload": "hpstalkOptionB"
-                        }
-                    ]
-                }
-            ]
+    "options": {
+        "attachment": {
+            "type": "template",
+            "payload": {
+                "template_type": "generic",
+                "elements": [
+                    {
+                        "title": "10 carnations bouquet",
+                        "image_url": "https://scontent-kul1-1.xx.fbcdn.net/v/t1.0-9/13087295_1701835560080259_6685567727292698672_n.jpg?oh=cd2b43e554d2c9efdbeaf134861ea372&oe=57D29F7A",
+                        "subtitle": "RM 59.00",
+                        "buttons": [
+                            {
+                                "type": "web_url",
+                                "url": "https://www.facebook.com/helprmy/photos/pcb.1701826800081135/1701835560080259/?type=3&theater",
+                                "title": "View Details"
+                            },
+                            {
+                                "type": "postback",
+                                "title": "Select",
+                                "payload": "hpstalkOptionA"
+                            }
+                        ]
+                    },
+                    {
+                        "title": "9 red roses bouquet",
+                        "image_url": "https://scontent-kul1-1.xx.fbcdn.net/t31.0-8/13217393_1701822580081557_8112651684345470688_o.jpg",
+                        "subtitle": "RM 65.00",
+                        "buttons": [
+                            {
+                                "type": "web_url",
+                                "url": "https://www.facebook.com/helprmy/photos/pcb.1701826800081135/1701822580081557/?type=3&theater",
+                                "title": "View Details"
+                            },
+                            {
+                                "type": "postback",
+                                "title": "Select",
+                                "payload": "hpstalkOptionB"
+                            }
+                        ]
+                    }
+                ]
+            }
+        }
+    },
+    "payment": {
+        "attachment": {
+            "type": "template",
+            "payload": {
+                "template_type": "generic",
+                "elements": [
+                    {
+                        "title": "10 carnations bouquet",
+                        "image_url": "https://scontent-kul1-1.xx.fbcdn.net/v/t1.0-9/13087295_1701835560080259_6685567727292698672_n.jpg?oh=cd2b43e554d2c9efdbeaf134861ea372&oe=57D29F7A",
+                        "subtitle": "RM 59.00",
+                        "buttons": [
+                            {
+                                "type": "web_url",
+                                "url": "https://www.facebook.com/helprmy/photos/pcb.1701826800081135/1701835560080259/?type=3&theater",
+                                "title": "Pay now"
+                            }
+                        ]
+                    },
+                    {
+                        "title": "9 red roses bouquet",
+                        "image_url": "https://scontent-kul1-1.xx.fbcdn.net/t31.0-8/13217393_1701822580081557_8112651684345470688_o.jpg",
+                        "subtitle": "RM 65.00",
+                        "buttons": [
+                            {
+                                "type": "web_url",
+                                "url": "https://www.facebook.com/helprmy/photos/pcb.1701826800081135/1701822580081557/?type=3&theater",
+                                "title": "Pay now"
+                            }
+                        ]
+                    }
+                ]
+            }
         }
     }
 }

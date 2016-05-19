@@ -23,3 +23,11 @@ exports.popShortId = function (id) {
     myCache.del(id);
     return true;
 }
+
+exports.put = function(key, object){
+    myCache.set(key, object);
+}
+
+exports.get = function(key){
+    return myCache.get(key);
+}
