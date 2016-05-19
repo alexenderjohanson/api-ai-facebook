@@ -9,8 +9,9 @@ const cache = require('./cache');
 
 const OPTION_A = "hpstalkOptionA";
 const OPTION_B = "hpstalkOptionB";
+const MESSAGE_KEY = "hpstalk-message-";
 
-exports.handle = function (response, sender) {
+exports.handle = function (response, sender, rawText) {
 
     let responseText = response.result.fulfillment.speech;
     let responseData = response.result.fulfillment.data;
@@ -48,7 +49,7 @@ exports.handle = function (response, sender) {
 
             try {
                 console.log(data);
-                
+
                 let shortId = cache.generateShortId();
                 data.options.attachment.payload.elements[0].buttons[1].payload = OPTION_A + "-" + shortId;
                 data.options.attachment.payload.elements[1].buttons[1].payload = OPTION_B + "-" + shortId;
@@ -60,6 +61,12 @@ exports.handle = function (response, sender) {
         } else {
             fb.sendFBMessageText(sender, "Sorry, your delivery date has to be at least 2 days in advance. Please try again another date");
         }
+    } else if (_.findIndex(responseContexts, { "name": "hpstalk_dialog_params_sendername" }) >= 0){
+        
+        let messageKey = MESSAGE_KEY + sender;
+        cache.put(messageKey, rawText);
+        
+        fb.processResponseData(sender, responseData, responseText);
     } else if (!actionIncomplete) {
 
         repeatOrder(sender, parameters);
@@ -93,12 +100,16 @@ function repeatOrder(sender, parameters) {
     // postcode
     // recipient-contact
     // recipient-name
-    
+
     let locationResult = location.validatePostcode(parameters.postcode);
-    
-    let address = `${parameters.address1}\n${parameters.address2}\n${parameters.postcode}, ${locationResult.city}\n\n`
 
-    let message = `Let me repeat your order\nAddress:${address}\nDelivery Date: ${parameters.date}\nRecipient Name: ${parameters.recipientName}\nRecipient Contact: ${parameters.recipientContact}\nMessage: ${parameters.message}\nName on card: ${parameters.senderName}`
+    let address = `${parameters.address1}\n${parameters.address2}\n${parameters.postcode}, ${locationResult.city},\n${location.selangor}\n\n`
+    let message = cache.get(MESSAGE_KEY + sender);
 
-    fb.sendFBMessageText(sender, message);
+    let repeatMessage = `Let me repeat your order\nAddress:${address}Delivery Date: ${parameters.date}\nRecipient Name: ${parameters.recipientName}\nRecipient Contact: ${parameters.recipientContact}\nMessage:\n${message}\nName on card: ${parameters.senderName}`
+
+    fb.sendFBMessageText(sender, repeatMessage);
+
+    let payment = data.payment;
+    fb.sendFBMessage(payment);
 }

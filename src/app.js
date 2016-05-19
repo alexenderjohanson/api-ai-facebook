@@ -100,7 +100,7 @@ function processEvent(event) {
 
                 } else if (action == "hpstalk") {
 
-                    hpstalk.handle(response, sender);
+                    hpstalk.handle(response, sender, text);
                 } else if (action == "get-address" && complete) {
 
                     let foodOrderingContext = _.find(responseContexts, { "name": "food-ordering" });
