@@ -46,18 +46,19 @@ exports.handle = function (response, sender) {
         if (dateValidationResult) {
             fb.processResponseData(sender, responseData, responseText);
 
-            try{
-            let shortId = cache.generateShortId();
-            data.options.attachment.payload.elements[0].buttons[1].payload = OPTION_A + "-" + shortId;
-            data.options.attachment.payload.elements[1].buttons[1].payload = OPTION_B + "-" + shortId;
+            try {
+                console.log(data);
+                
+                let shortId = cache.generateShortId();
+                data.options.attachment.payload.elements[0].buttons[1].payload = OPTION_A + "-" + shortId;
+                data.options.attachment.payload.elements[1].buttons[1].payload = OPTION_B + "-" + shortId;
 
-            console.log(data.options);
-            fb.sendFBMessage(sender, data.options);
-            }catch(ex){
+                fb.sendFBMessage(sender, data.options);
+            } catch (ex) {
                 console.log(ex);
             }
         } else {
-            fb.sendFBMessageText(sender, "Sorry, your delivery date has to be at least 2 days in advance. Please try again by typing HPSTALK.");
+            fb.sendFBMessageText(sender, "Sorry, your delivery date has to be at least 2 days in advance. Please try again another date");
         }
     } else if (!actionIncomplete) {
 
@@ -83,8 +84,8 @@ function createReqeust() {
 
 }
 
-function repeatOrder(sender, parameters){
-    
+function repeatOrder(sender, parameters) {
+
     // address1
     // address2
     // date
@@ -92,8 +93,8 @@ function repeatOrder(sender, parameters){
     // postcode
     // recipient-contact
     // recipient-name
-    
+
     let message = `Let me repeat your order\nAddress:\n${parameters.address1}\n${parameters.address2}\n${parameters.postcode}\n\nDelivery Date: ${parameters.date}\nRecipient Name: ${parameters.recipientName}\nRecipient Contact: ${parameters.recipientContact}\nMessage: ${parameters.message}\nName on card: ${parameters.senderName}`
-    
+
     fb.sendFBMessageText(sender, message);
 }
