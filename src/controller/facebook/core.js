@@ -1,6 +1,7 @@
 'use strict';
 
 const request = require('request');
+const fetch = require('node-fetch');
 const appConfig = require('../../../app');
 
 const FB_PAGE_ACCESS_TOKEN = process.env.FB_PAGE_ACCESS_TOKEN || appConfig.env.FB_PAGE_ACCESS_TOKEN;
@@ -110,4 +111,17 @@ function chunkString(s, len) {
     }
     output.push(s.substr(prev));
     return output;
+}
+
+exports.getFbUserProfile = getFbUserProfile;
+
+function getFbUserProfile(fbUserId) {
+
+    return fetch(`https://graph.facebook.com/v2.6/${fbUserId}?fields=first_name,last_name,profile_pic,locale,timezone,gender&access_token=${FB_PAGE_ACCESS_TOKEN}`).then(function (res) {
+        return res.json();
+    }).then(function (json) {
+        return json;
+    }, function (error) {
+        console.log(error);
+    });
 }

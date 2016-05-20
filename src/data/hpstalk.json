@@ -12,13 +12,13 @@
                         "buttons": [
                             {
                                 "type": "web_url",
-                                "url": "https://www.facebook.com/helprmy/photos/pcb.1701826800081135/1701835560080259/?type=3&theater",
+                                "url": "https://www.facebook.com/commerce/products/946986888754919/",
                                 "title": "View Details"
                             },
                             {
                                 "type": "postback",
                                 "title": "Select",
-                                "payload": "hpstalkOptionA"
+                                "payload": "hpstalka"
                             }
                         ]
                     },
@@ -29,13 +29,13 @@
                         "buttons": [
                             {
                                 "type": "web_url",
-                                "url": "https://www.facebook.com/helprmy/photos/pcb.1701826800081135/1701822580081557/?type=3&theater",
+                                "url": "https://www.facebook.com/commerce/products/1198310413541931/",
                                 "title": "View Details"
                             },
                             {
                                 "type": "postback",
                                 "title": "Select",
-                                "payload": "hpstalkOptionB"
+                                "payload": "hpstalkb"
                             }
                         ]
                     }
@@ -52,13 +52,13 @@
                 "buttons": [
                     {
                         "type": "web_url",
-                        "url": "https://www.facebook.com/helprmy/photos/pcb.1701826800081135/1701835560080259/?type=3&theater",
+                        "url": "",
                         "title": "Pay now"
                     },
                     {
                         "type": "postback",
                         "title": "Cancel order",
-                        "payload": "hpstalkOptionB"
+                        "payload": "cancel"
                     }
                 ]
             }

@@ -6,9 +6,12 @@ const location = require('./location');
 const moment = require('moment');
 const fb = require('./facebook/core');
 const cache = require('./cache');
+const user = require('./user');
+const billplz = require('./billplz');
 
-const OPTION_A = "hpstalkOptionA";
-const OPTION_B = "hpstalkOptionB";
+const OPTION_A = "hpstalka";
+const OPTION_B = "hpstalkb";
+const CANCEL_ORDER = "cancelOrder-";
 const MESSAGE_KEY = "hpstalk-message-";
 
 exports.handle = function (response, sender, rawText) {
@@ -31,7 +34,11 @@ exports.handle = function (response, sender, rawText) {
     // recipient-contact
     // recipient-name
 
-    console.log(parameters);
+    // console.log(parameters);
+    
+    fb.getFbUserProfile(sender).then(function(reuslt){
+        console.log(result);
+    });
 
     //user currently in date context, means we have postcode already
     if (_.findIndex(responseContexts, { "name": "hpstalk_dialog_params_date" }) >= 0) {
@@ -87,8 +94,17 @@ function validateDate(dateStr) {
     return deliveryDate.isAfter(moment().add(2, 'days')) && deliveryDate.isBefore(moment("2016-5-31", "YYYY-MM-DD"));
 }
 
-function createReqeust() {
+function createReqeust(sender) {
 
+    user.getUserByFbId(sender).then(function(userResult){
+        if(!userResult){
+            return fb.getFbUserProfile(sender).then(function(result){
+                console.log(result);
+            })
+        } else {
+            return userResult
+        }
+    })
 }
 
 function repeatOrder(sender, parameters) {
@@ -116,6 +132,12 @@ function repeatOrder(sender, parameters) {
 
     fb.sendFBMessageText(sender, repeatMessage);
 
+    let shortId = cache.generateShortId();
+    data.payment.attachment.payload.buttons[0].buttons[1].payload = CANCEL_ORDER + "-" + shortId;
+
+    let paymentLink = billplz.generatePaymentLink();
+    
     let payment = data.payment;
+    payment.payload.buttons[0].url = paymentLink;
     fb.sendFBMessage(sender, payment);
 }

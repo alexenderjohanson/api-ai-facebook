@@ -11,7 +11,7 @@ exports.handle = function (sender, payload) {
     //check if this postback is valid
     let shortid = split[1];
     let hasShortId = cache.popShortId(shortid);
-    
+
     console.log("shortid:" + shortid);
     console.log("paylaod: " + payload);
     console.log("has shortid: " + hasShortId);
@@ -89,7 +89,7 @@ exports.handle = function (sender, payload) {
                 }
             }
         };
-        
+
     } else if (action == "service-list") {
 
 
@@ -105,6 +105,11 @@ exports.handle = function (sender, payload) {
             "text": "Please enter new address"
         }
     } else if (action == "hpstalkOptionA" || action == "hpstalkOptionB") {
+        response = {
+            "recur": true,
+            "text": action
+        }
+    } else if (action == "cancelOrder") {
         response = {
             "recur": true,
             "text": action
