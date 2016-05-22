@@ -31,7 +31,7 @@ function processEvent(event) {
 
     let cachedUser = cache.get(senderId);
 
-    if (!cacheUser) {
+    if (!cachedUser) {
         
         console.log("get user by fb id");
         
