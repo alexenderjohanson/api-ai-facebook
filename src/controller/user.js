@@ -42,6 +42,7 @@ exports.createUser = function (senderId, fbUser) {
     }
 
     return fetch(`${API_URL}api/v1/users.json}`, { method: "POST", headers: HEADERS, body:user }).then(function(result){
+        console.log(result);
         console.log("create user:" + JSON.stringify(result.json()));
     });
 }
