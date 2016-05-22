@@ -40,8 +40,8 @@ function processEvent(event) {
                     fb.getFbUserProfile(senderId).then(function (result) {
 
                         if (result) {
-                            user.createUser(senderId, result).then(function(user){
-                                console.log(user);
+                            user.createUser(senderId, result).then(function(result){
+                                console.log(result);
                             });
                         }
                     })
