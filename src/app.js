@@ -30,7 +30,7 @@ function processEvent(event) {
         try {
             user.getUserByFbId(senderId).then(function (userResult) {
 
-                if (userResult.length == 0) {
+                if (userResult.length === 0) {
                     fb.getFbUserProfile(senderId).then(function (result) {
 
                         if (result) {
@@ -68,7 +68,7 @@ function processEvent(event) {
                 fb.sendFBMessage(senderId, response);
             }
         } catch (err) {
-            console.log(err)
+            console.log(err);
         }
     } else if (event.message && event.message.text) {
         let text = event.message.text;
@@ -178,18 +178,6 @@ function doSubscribeRequest() {
                 console.log('Subscription result: ', response.body);
             }
         });
-}
-
-function isDefined(obj) {
-    if (typeof obj == 'undefined') {
-        return false;
-    }
-
-    if (!obj) {
-        return false;
-    }
-
-    return obj !== null;
 }
 
 const app = require('./config/express')();

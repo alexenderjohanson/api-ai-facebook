@@ -10,7 +10,7 @@ const APIAI_LANG = process.env.APIAI_LANG || 'en';
 const apiAiService = apiai(APIAI_ACCESS_TOKEN, { language: APIAI_LANG, requestSource: "fb" });
 const sessionIds = new Map();
 
-exports.shouldClearContext = function (text) {
+function shouldClearContext(text) {
     if (text === "hpstalk") {
         return true;
     }
@@ -37,7 +37,7 @@ exports.getInitialContext = function (text, senderId) {
     }
 
     return undefined;
-}
+};
 
 exports.textRequest = function (text, senderId) {
 
@@ -48,7 +48,7 @@ exports.textRequest = function (text, senderId) {
     let apiaiRequest = apiAiService.textRequest(text,
         {
             sessionId: sessionIds.get(senderId),
-            resetContexts: apiaiController.shouldClearContext(text)
+            resetContexts: shouldClearContext(text)
         });
 
     apiaiRequest.on('response', (response) => {
@@ -183,4 +183,16 @@ exports.textRequest = function (text, senderId) {
     apiaiRequest.on('error', (error) => console.error(error));
     apiaiRequest.end();
 
+};
+
+function isDefined(obj) {
+    if (typeof obj == 'undefined') {
+        return false;
+    }
+
+    if (!obj) {
+        return false;
+    }
+
+    return obj !== null;
 }
