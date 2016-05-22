@@ -45,7 +45,7 @@ exports.handle = function (response, sender, rawText) {
                 data.fb_options.attachment.payload.elements[0].buttons[1].payload = OPTION_A + "-" + shortId;
                 data.fb_options.attachment.payload.elements[1].buttons[1].payload = OPTION_B + "-" + shortId;
 
-                fb.sendFBMessage(sender, data.fn_options);
+                fb.sendFBMessage(sender, data.fb_options);
             } catch (ex) {
                 console.log(ex);
             }
