@@ -54,7 +54,7 @@ function processEvent(event) {
 
         try {
             let response = postback.handle(senderId, event.postback.payload);
-            console.log("postback response:" + response);
+            console.log("postback response:" + JSON.stringify(response));
             if (response.recur) {
 
                 console.log(response);
