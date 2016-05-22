@@ -39,12 +39,7 @@ exports.handle = function (response, sender, rawText) {
     fb.getFbUserProfile(sender).then(function(reuslt){
         console.log(result);
     });
-    
-    _.map(responseContexts, function(context){
-       responseContexts.parameters.email 
-    });
    
-
     //user currently in date context, means we have postcode already
     if (_.findIndex(responseContexts, { "name": "hpstalk_dialog_params_date" }) >= 0) {
         let postcodeValidationResult = location.validatePostcode(parameters.postcode);
