@@ -12,8 +12,6 @@ exports.getUserByFbId = function (fbId) {
 
     return fetch(`${API_URL}api/v1/users.json?fbid=${fbId}`, { method: "GET", headers: HEADERS }).then(function (res) {
         
-        console.log(res.Body.url);
-        
         return res.json();
     }, function (error) {
         console.log(error);
