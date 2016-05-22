@@ -8,6 +8,7 @@ const fb = require('./facebook/core');
 const cache = require('./cache');
 const user = require('./user');
 const billplz = require('./billplz');
+const apiai = require('./apiai');
 
 const OPTION_A = "hpstalka";
 const OPTION_B = "hpstalkb";
@@ -35,11 +36,11 @@ exports.handle = function (response, sender, rawText) {
     // recipient-name
 
     // console.log(parameters);
-    
-    fb.getFbUserProfile(sender).then(function(reuslt){
+
+    fb.getFbUserProfile(sender).then(function (reuslt) {
         console.log(result);
     });
-   
+
     //user currently in date context, means we have postcode already
     if (_.findIndex(responseContexts, { "name": "hpstalk_dialog_params_date" }) >= 0) {
         let postcodeValidationResult = location.validatePostcode(parameters.postcode);
@@ -74,6 +75,20 @@ exports.handle = function (response, sender, rawText) {
         cache.put(messageKey, rawText);
 
         fb.processResponseData(sender, responseData, responseText);
+    } else if (_.findIndex(responseContexts, { "name": "hpstalk_dialog_params_contact" })) {
+        let userProfile = cache.get(sender);
+        if (!userProfile || !userProfile.phone) {
+            fb.processResponseData(sender, responseData, responseText);
+        } else {
+            apiai.textRequest(userProfile.phone, sender);
+        }
+    } else if (_.findIndex(responseContexts, { "name": "hpstalk_dialog_params_email" })) {
+        let userProfile = cache.get(sender);
+        if (!userProfile || !userProfile.email) {
+            fb.processResponseData(sender, responseData, responseText);
+        } else {
+            apiai.textRequest(userProfile.email, sender);
+        }
     } else if (!actionIncomplete) {
 
         repeatOrder(sender, parameters);
@@ -96,9 +111,9 @@ function validateDate(dateStr) {
 
 function createReqeust(sender) {
 
-    user.getUserByFbId(sender).then(function(userResult){
-        if(!userResult){
-            return fb.getFbUserProfile(sender).then(function(result){
+    user.getUserByFbId(sender).then(function (userResult) {
+        if (!userResult) {
+            return fb.getFbUserProfile(sender).then(function (result) {
                 console.log(result);
             })
         } else {
@@ -137,9 +152,11 @@ function repeatOrder(sender, parameters) {
 
     //generate payment link
     let userProfile = cache.get(sender);
-    let productDetail = _.findIndex(data.options, {collection_id: paramters.option});
-    // let paymentLink = billplz.generatePaymentLink(productDetail.collection_id, );
-    
+    let contact = parameters.contact || userProfile.phone;
+    let email = parameters.email || userProfile.email;
+    let productDetail = _.findIndex(data.options, { collection_id: paramters.option });
+    let paymentLink = billplz.generatePaymentLink(productDetail.collection_id, userProfile.name, email, contact, productDetail.price, productDetail.title);
+
     let payment = data.payment;
     payment.payload.buttons[0].url = paymentLink;
     fb.sendFBMessage(sender, payment);

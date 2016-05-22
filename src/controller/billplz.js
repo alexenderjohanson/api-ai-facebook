@@ -7,8 +7,8 @@ const qs = require('qs');
 
 const BILLPLZ_URL = `https://www.billplz.com/`;
 
-exports.generatePaymentLink = function(collectionId, name, email, contact, amount, desc){
-    
+exports.generatePaymentLink = function (collectionId, name, email, contact, amount, desc) {
+
     let query = {
         collection_id: collectionId,
         email: email,
@@ -30,5 +30,7 @@ exports.generatePaymentLink = function(collectionId, name, email, contact, amoun
     fetch(url, { method: 'POST', headers: headers })
         .then(function (res) {
             return res.json();
+        }, function (ex) {
+            console.log(ex);
         });
 }
