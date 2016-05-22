@@ -1,6 +1,9 @@
 'use strict';
 const cache = require('./cache');
 const hpstalk = require('./hpstalk');
+const appConfig = require('../../app');
+const apiai = require('apiai');
+const uuid = require('node-uuid');
 
 const APIAI_ACCESS_TOKEN = process.env.APIAI_ACCESS_TOKEN || appConfig.env.APIAI_ACCESS_TOKEN;
 const APIAI_LANG = process.env.APIAI_LANG || 'en';

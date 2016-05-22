@@ -1,18 +1,18 @@
 'use strict';
 
-const apiai = require('apiai');
-const uuid = require('node-uuid');
 const request = require('request');
 const fetch = require('node-fetch');
 const _ = require('lodash');
 const moment = require('moment');
+const appConfig = require('../app');
+
 const apiaiController = require('./controller/apiai');
 const postback = require('./controller/facebook/postback');
 const cache = require('./controller/cache');
 const user = require('./controller/user');
 const fb = require('./controller/facebook/core');
 
-const appConfig = require('../app');
+
 const REST_PORT = (process.env.PORT || 5000);
 const FB_VERIFY_TOKEN = process.env.FB_VERIFY_TOKEN || appConfig.env.FB_VERIFY_TOKEN;
 const FB_PAGE_ACCESS_TOKEN = process.env.FB_PAGE_ACCESS_TOKEN || appConfig.env.FB_PAGE_ACCESS_TOKEN;
