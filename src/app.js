@@ -30,8 +30,6 @@ function processEvent(event) {
     var senderId = event.sender.id;
 
     let cachedUser = cache.get(senderId);
-    
-    console.log(cachedUser);
 
     if (!cachedUser) {
         try {
@@ -106,7 +104,7 @@ function processEvent(event) {
         let apiaiRequest = apiAiService.textRequest(text,
             {
                 sessionId: sessionIds.get(senderId),
-                context: context,
+                contexts: apiaiController.getInitialContext(text, senderId),
                 resetContexts: apiaiController.shouldClearContext(text)
             });
 

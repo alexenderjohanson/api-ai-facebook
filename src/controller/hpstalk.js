@@ -39,6 +39,11 @@ exports.handle = function (response, sender, rawText) {
     fb.getFbUserProfile(sender).then(function(reuslt){
         console.log(result);
     });
+    
+    _.map(responseContexts, function(context){
+       responseContexts.parameters.email 
+    });
+   
 
     //user currently in date context, means we have postcode already
     if (_.findIndex(responseContexts, { "name": "hpstalk_dialog_params_date" }) >= 0) {
@@ -136,6 +141,7 @@ function repeatOrder(sender, parameters) {
     data.payment.attachment.payload.buttons[0].buttons[1].payload = CANCEL_ORDER + "-" + shortId;
 
     //generate payment link
+    let userProfile = cache.get(sender);
     let productDetail = _.findIndex(data.options, {collection_id: paramters.option});
     // let paymentLink = billplz.generatePaymentLink(productDetail.collection_id, );
     

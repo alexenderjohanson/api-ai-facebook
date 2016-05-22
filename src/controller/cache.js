@@ -14,20 +14,30 @@ exports.generateShortId = function () {
 }
 
 exports.popShortId = function (id) {
-    
+
     const value = myCache.get(id);
     if (value == undefined) {
-        return false; 
+        return false;
     }
-    
+
     myCache.del(id);
     return true;
 }
 
-exports.put = function(key, object){
+exports.put = function (key, object) {
     myCache.set(key, object);
 }
 
-exports.get = function(key){
+exports.get = function (key) {
     return myCache.get(key);
+}
+
+exports.pop = function (key) {
+    const value = myCache.get(id);
+    if (value == undefined) {
+        return;
+    }
+
+    myCache.del(id);
+    return value;
 }
