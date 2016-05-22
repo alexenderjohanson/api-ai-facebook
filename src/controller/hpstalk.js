@@ -24,22 +24,6 @@ exports.handle = function (response, sender, rawText) {
     let parameters = response.result.parameters;
     let actionIncomplete = response.result.actionIncomplete;
     let responseContexts = response.result.contexts;
-    // let userProfile = userProfiles.get(sender);
-
-    // PARAMETERS
-    // address1
-    // address2
-    // date
-    // message
-    // postcode
-    // recipient-contact
-    // recipient-name
-
-    // console.log(parameters);
-
-    fb.getFbUserProfile(sender).then(function (reuslt) {
-        console.log(result);
-    });
 
     //user currently in date context, means we have postcode already
     if (_.findIndex(responseContexts, { "name": "hpstalk_dialog_params_date" }) >= 0) {
@@ -56,13 +40,12 @@ exports.handle = function (response, sender, rawText) {
             fb.processResponseData(sender, responseData, responseText);
 
             try {
-                console.log(data);
 
                 let shortId = cache.generateShortId();
                 data.fb_options.attachment.payload.elements[0].buttons[1].payload = OPTION_A + "-" + shortId;
                 data.fb_options.attachment.payload.elements[1].buttons[1].payload = OPTION_B + "-" + shortId;
 
-                fb.sendFBMessage(sender, data.options);
+                fb.sendFBMessage(sender, data.fn_options);
             } catch (ex) {
                 console.log(ex);
             }
