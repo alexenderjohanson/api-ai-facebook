@@ -40,8 +40,10 @@ exports.createUser = function (senderId, fbUser) {
         name: `${fbUser.first_name} ${fbUser.last_name}`,
         gender: fbUser.gender
     }
+    
+    console.log(user);
 
-    return fetch(`${API_URL}api/v1/users.json}`, { method: "POST", headers: HEADERS, body:user }).then(function(result){
+    return fetch(`${API_URL}api/v1/users.json}`, { method: 'POST', body:user, headers: HEADERS }).then(function(result){
         console.log(result);
         console.log("create user:" + JSON.stringify(result.json()));
     });
