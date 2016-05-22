@@ -58,8 +58,8 @@ exports.handle = function (response, sender, rawText) {
                 console.log(data);
 
                 let shortId = cache.generateShortId();
-                data.options.attachment.payload.elements[0].buttons[1].payload = OPTION_A + "-" + shortId;
-                data.options.attachment.payload.elements[1].buttons[1].payload = OPTION_B + "-" + shortId;
+                data.fb_options.attachment.payload.elements[0].buttons[1].payload = OPTION_A + "-" + shortId;
+                data.fb_options.attachment.payload.elements[1].buttons[1].payload = OPTION_B + "-" + shortId;
 
                 fb.sendFBMessage(sender, data.options);
             } catch (ex) {
@@ -135,7 +135,9 @@ function repeatOrder(sender, parameters) {
     let shortId = cache.generateShortId();
     data.payment.attachment.payload.buttons[0].buttons[1].payload = CANCEL_ORDER + "-" + shortId;
 
-    let paymentLink = billplz.generatePaymentLink();
+    //generate payment link
+    let productDetail = _.findIndex(data.options, {collection_id: paramters.option});
+    // let paymentLink = billplz.generatePaymentLink(productDetail.collection_id, );
     
     let payment = data.payment;
     payment.payload.buttons[0].url = paymentLink;

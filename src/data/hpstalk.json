@@ -1,5 +1,5 @@
 {
-    "options": {
+    "fb_options": {
         "attachment": {
             "type": "template",
             "payload": {
@@ -63,5 +63,18 @@
                 ]
             }
         }
-    }
+    },
+    "options":[
+        {
+            "title": "10 carnations bouquet",
+            "collection_id": "hpstalka", 
+            "price": 5900
+        },
+        {
+            "title": "9 red roses bouquet",
+            "collection_id": "hpstalkb", 
+            "price": 6500
+        }
+        
+    ]
 }

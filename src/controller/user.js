@@ -17,7 +17,7 @@ exports.getUserByFbId = function (fbId) {
     });
 }
 
-exports.createUser = function(){
-    
+exports.createUser = function () {
+
     return fetch(`${API_URL}api/v1/users.json}`, { method: "POST", headers: HEADERS })
 }

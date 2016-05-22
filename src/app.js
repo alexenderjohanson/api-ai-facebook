@@ -9,6 +9,9 @@ const moment = require('moment');
 const hpstalk = require('./controller/hpstalk');
 const apiaiController = require('./controller/apiai');
 const postback = require('./controller/facebook/postback');
+const cache = require('./controller/cache');
+const user = require('./controller/user');
+const fb = require('./controller/facebook/core');
 
 const appConfig = require('../app');
 const REST_PORT = (process.env.PORT || 5000);
@@ -20,44 +23,54 @@ const FB_PAGE_ACCESS_TOKEN = process.env.FB_PAGE_ACCESS_TOKEN || appConfig.env.F
 const apiAiService = apiai(APIAI_ACCESS_TOKEN, { language: APIAI_LANG, requestSource: "fb" });
 const sessionIds = new Map();
 const contexts = new Map();
-const userProfiles = new Map();
 const orders = new Map();
 const addresses = new Map();
 
 function processEvent(event) {
-    var sender = event.sender.id;
+    var senderId = event.sender.id;
+
+    let user = cache.get(senderId);
+
+    if (!user) {
+        user.getUserByFbId(senderId).then(function (userResult) {
+            if (!userResult) {
+                return fb.getFbUserProfile(senderId).then(function (result) {
+                    console.log(result);
+                })
+            } else {
+                console.log(userResult);
+            }
+        })
+    }
 
     if (event.postback) {
 
         try {
-            let response = postback.handle(sender, event.postback.payload);
+            let response = postback.handle(senderId, event.postback.payload);
 
             if (response.recur) {
-                
+
                 console.log(response);
-                
+
                 let newEvent = event;
                 newEvent.postback = undefined;
                 newEvent.message = response;
                 processEvent(newEvent);
             } else {
                 console.log("sending postback data");
-                sendFBMessage(sender, response);
+                fb.sendFBMessage(senderId, response);
             }
         } catch (err) {
             console.log(err)
         }
     } else if (event.message && event.message.text) {
         let text = event.message.text;
-        
+
         console.log("text:" + text);
         // Handle a text message from this sender
 
-        if (!sessionIds.has(sender)) {
-            sessionIds.set(sender, uuid.v1());
-            getFbUserProfile(sender).then(function (profile) {
-                userProfiles.set(sender, profile);
-            })
+        if (!sessionIds.has(senderId)) {
+            sessionIds.set(senderId, uuid.v1());
         }
 
         let context = null;
@@ -78,9 +91,9 @@ function processEvent(event) {
 
         let apiaiRequest = apiAiService.textRequest(text,
             {
-                sessionId: sessionIds.get(sender),
+                sessionId: sessionIds.get(senderId),
                 context: context,
-                resetContexts: apiaiController.shouldClearContext(text) 
+                resetContexts: apiaiController.shouldClearContext(text)
             });
 
         apiaiRequest.on('response', (response) => {
@@ -91,122 +104,124 @@ function processEvent(event) {
                 let complete = !response.result.actionIncomplete;
                 let parameters = response.result.parameters;
                 let responseContexts = response.result.contexts;
-                let userProfile = userProfiles.get(sender);
+                let userProfile = userProfiles.get(senderId);
 
                 // contexts.set(sender, resultContexts);
-                if (action == "get-user" && complete) {
+                // if (action == "get-user" && complete) {
 
-                    sendFBMessageText(sender, `Name: ${userProfile.first_name} ${userProfile.last_name}\nGender: ${userProfile.gender}\nTime zone: ${userProfile.timezone}`);
+                //     sendFBMessageText(sender, `Name: ${userProfile.first_name} ${userProfile.last_name}\nGender: ${userProfile.gender}\nTime zone: ${userProfile.timezone}`);
 
-                } else if (action == "hpstalk") {
+                // } else
+                if (action == "hpstalk") {
 
-                    hpstalk.handle(response, sender, text);
-                } else if (action == "get-address" && complete) {
-
-                    let foodOrderingContext = _.find(responseContexts, { "name": "food-ordering" });
-                    // console.log("foodOrderingContext:" + JSON.stringify(foodOrderingContext));
-
-                    if (!foodOrderingContext) {
-                        sendFBMessageText(sender, "Whoops, we lost your order in the matrix. Neo is on it.");
-                        return;
-                    }
-
-                    try {
-                        let contextParameters = foodOrderingContext.parameters;
-
-                        //add address to address book
-                        addresses.set(sender, contextParameters.address);
-
-                        let repeatOrder = `Let me repeat your order: \nName: ${userProfile.first_name} \nContact: ${contextParameters.contact} \nAddress: ${contextParameters.address} \nFood: ${contextParameters.food}`
-
-                        let order = Object.assign({}, userProfile, foodOrderingContext.parameters);
-                        orders.set(sender, order);
-                        // console.log(order);
-
-                        let messageData = {
-                            "attachment": {
-                                "type": "template",
-                                "payload": {
-                                    "template_type": "generic",
-                                    "elements": [{
-                                        "title": "Confirm your order above?",
-                                        "buttons": [
-                                            {
-                                                "type": "postback",
-                                                "payload": "confirm-order",
-                                                "title": "Confirm"
-                                            },
-                                            {
-                                                "type": "postback",
-                                                "title": "Cancel",
-                                                "payload": "cancel-order",
-                                            }
-                                        ],
-                                    }]
-                                }
-                            }
-                        };
-
-                        sendFBMessageText(sender, repeatOrder);
-                        sendFBMessage(sender, messageData);
-                    } catch (err) {
-                        sendFBMessage(sender, { text: err.message });
-                    }
-
-                } else if (action == "food-ordering" && complete) {
-
-                    try {
-                        let address = addresses.get(sender);
-
-                        console.log("address" + address);
-
-                        if (address) {
-                            let messageData = {
-                                "attachment": {
-                                    "type": "template",
-                                    "payload": {
-                                        "template_type": "button",
-                                        "text": `Should we deliver to this address address?\n${address}`,
-                                        "buttons": [
-                                            {
-                                                "type": "postback",
-                                                "payload": "use-existing-address",
-                                                "title": "Yes"
-                                            },
-                                            {
-                                                "type": "postback",
-                                                "title": "No",
-                                                "payload": "enter-new-address",
-                                            }
-                                        ],
-                                    }
-                                }
-                            };
-
-                            sendFBMessage(sender, messageData);
-                        } else {
-                            processResponseData(sender, responseData, responseText);
-                        }
-                    } catch (err) {
-                        sendFBMessage(sender, { text: err.message });
-                    }
-                } else if (isDefined(responseData) && isDefined(responseData.facebook)) {
-                    try {
-                        console.log("response:" + responseData.facebook)
-                        sendFBMessage(sender, responseData.facebook);
-                    } catch (err) {
-                        sendFBMessage(sender, { text: err.message });
-                    }
-                } else if (isDefined(responseText)) {
-                    console.log("response:" + responseText);
-                    // facebook API limit for text length is 320,
-                    // so we split message if needed
-                    var splittedText = splitResponse(responseText);
-
-                    for (var i = 0; i < splittedText.length; i++) {
-                        sendFBMessage(sender, { text: splittedText[i] });
-                    }
+                    hpstalk.handle(response, senderId, text);
                 }
+                //else  if (action == "get-address" && complete) {
+
+                //     let foodOrderingContext = _.find(responseContexts, { "name": "food-ordering" });
+                //     // console.log("foodOrderingContext:" + JSON.stringify(foodOrderingContext));
+
+                //     if (!foodOrderingContext) {
+                //         sendFBMessageText(sender, "Whoops, we lost your order in the matrix. Neo is on it.");
+                //         return;
+                //     }
+
+                //     try {
+                //         let contextParameters = foodOrderingContext.parameters;
+
+                //         //add address to address book
+                //         addresses.set(sender, contextParameters.address);
+
+                //         let repeatOrder = `Let me repeat your order: \nName: ${userProfile.first_name} \nContact: ${contextParameters.contact} \nAddress: ${contextParameters.address} \nFood: ${contextParameters.food}`
+
+                //         let order = Object.assign({}, userProfile, foodOrderingContext.parameters);
+                //         orders.set(sender, order);
+                //         // console.log(order);
+
+                //         let messageData = {
+                //             "attachment": {
+                //                 "type": "template",
+                //                 "payload": {
+                //                     "template_type": "generic",
+                //                     "elements": [{
+                //                         "title": "Confirm your order above?",
+                //                         "buttons": [
+                //                             {
+                //                                 "type": "postback",
+                //                                 "payload": "confirm-order",
+                //                                 "title": "Confirm"
+                //                             },
+                //                             {
+                //                                 "type": "postback",
+                //                                 "title": "Cancel",
+                //                                 "payload": "cancel-order",
+                //                             }
+                //                         ],
+                //                     }]
+                //                 }
+                //             }
+                //         };
+
+                //         sendFBMessageText(sender, repeatOrder);
+                //         sendFBMessage(sender, messageData);
+                //     } catch (err) {
+                //         sendFBMessage(sender, { text: err.message });
+                //     }
+
+                // } else if (action == "food-ordering" && complete) {
+
+                //     try {
+                //         let address = addresses.get(sender);
+
+                //         console.log("address" + address);
+
+                //         if (address) {
+                //             let messageData = {
+                //                 "attachment": {
+                //                     "type": "template",
+                //                     "payload": {
+                //                         "template_type": "button",
+                //                         "text": `Should we deliver to this address address?\n${address}`,
+                //                         "buttons": [
+                //                             {
+                //                                 "type": "postback",
+                //                                 "payload": "use-existing-address",
+                //                                 "title": "Yes"
+                //                             },
+                //                             {
+                //                                 "type": "postback",
+                //                                 "title": "No",
+                //                                 "payload": "enter-new-address",
+                //                             }
+                //                         ],
+                //                     }
+                //                 }
+                //             };
+
+                //             sendFBMessage(sender, messageData);
+                //         } else {
+                //             processResponseData(sender, responseData, responseText);
+                //         }
+                //     } catch (err) {
+                //         sendFBMessage(sender, { text: err.message });
+                //     }
+                // } else if (isDefined(responseData) && isDefined(responseData.facebook)) {
+                //     try {
+                //         console.log("response:" + responseData.facebook)
+                //         sendFBMessage(sender, responseData.facebook);
+                //     } catch (err) {
+                //         sendFBMessage(sender, { text: err.message });
+                //     }
+                // } else if (isDefined(responseText)) {
+                //     console.log("response:" + responseText);
+                //     // facebook API limit for text length is 320,
+                //     // so we split message if needed
+                //     var splittedText = splitResponse(responseText);
+
+                //     for (var i = 0; i < splittedText.length; i++) {
+                //         sendFBMessage(sender, { text: splittedText[i] });
+                //     }
+                // }
 
             }
         });
@@ -216,104 +231,93 @@ function processEvent(event) {
     }
 }
 
-function processResponseData(sender, responseData, responseText) {
+// function processResponseData(sender, responseData, responseText) {
 
-    // console.log(responseData);
+//     // console.log(responseData);
 
-    if (isDefined(responseData) && isDefined(responseData.facebook)) {
-        try {
-            console.log('Response as formatted message');
-            sendFBMessage(sender, responseData.facebook);
-        } catch (err) {
-            sendFBMessage(sender, { text: err.message });
-        }
-    } else if (isDefined(responseText)) {
-        console.log('Response as text message');
-        // facebook API limit for text length is 320,
-        // so we split message if needed
-        var splittedText = splitResponse(responseText);
+//     if (isDefined(responseData) && isDefined(responseData.facebook)) {
+//         try {
+//             console.log('Response as formatted message');
+//             sendFBMessage(sender, responseData.facebook);
+//         } catch (err) {
+//             sendFBMessage(sender, { text: err.message });
+//         }
+//     } else if (isDefined(responseText)) {
+//         console.log('Response as text message');
+//         // facebook API limit for text length is 320,
+//         // so we split message if needed
+//         var splittedText = splitResponse(responseText);
 
-        for (var i = 0; i < splittedText.length; i++) {
-            sendFBMessage(sender, { text: splittedText[i] });
-        }
-    }
-}
+//         for (var i = 0; i < splittedText.length; i++) {
+//             sendFBMessage(sender, { text: splittedText[i] });
+//         }
+//     }
+// }
 
-function splitResponse(str) {
-    if (str.length <= 320) {
-        return [str];
-    }
+// function splitResponse(str) {
+//     if (str.length <= 320) {
+//         return [str];
+//     }
 
-    var result = chunkString(str, 300);
+//     var result = chunkString(str, 300);
 
-    return result;
+//     return result;
 
-}
+// }
 
-function chunkString(s, len) {
-    var curr = len, prev = 0;
+// function chunkString(s, len) {
+//     var curr = len, prev = 0;
 
-    var output = [];
+//     var output = [];
 
-    while (s[curr]) {
-        if (s[curr++] == ' ') {
-            output.push(s.substring(prev, curr));
-            prev = curr;
-            curr += len;
-        }
-        else {
-            var currReverse = curr;
-            do {
-                if (s.substring(currReverse - 1, currReverse) == ' ') {
-                    output.push(s.substring(prev, currReverse));
-                    prev = currReverse;
-                    curr = currReverse + len;
-                    break;
-                }
-                currReverse--;
-            } while (currReverse > prev)
-        }
-    }
-    output.push(s.substr(prev));
-    return output;
-}
+//     while (s[curr]) {
+//         if (s[curr++] == ' ') {
+//             output.push(s.substring(prev, curr));
+//             prev = curr;
+//             curr += len;
+//         }
+//         else {
+//             var currReverse = curr;
+//             do {
+//                 if (s.substring(currReverse - 1, currReverse) == ' ') {
+//                     output.push(s.substring(prev, currReverse));
+//                     prev = currReverse;
+//                     curr = currReverse + len;
+//                     break;
+//                 }
+//                 currReverse--;
+//             } while (currReverse > prev)
+//         }
+//     }
+//     output.push(s.substr(prev));
+//     return output;
+// }
 
-function getFbUserProfile(fbUserId) {
+// function sendFBMessage(sender, messageData) {
 
-    return fetch(`https://graph.facebook.com/v2.6/${fbUserId}?fields=first_name,last_name,profile_pic,locale,timezone,gender&access_token=${FB_PAGE_ACCESS_TOKEN}`).then(function (res) {
-        return res.json();
-    }).then(function (json) {
-        return json;
-    }, function (error) {
-        console.log(error);
-    });
-}
+//     request({
+//         url: 'https://graph.facebook.com/v2.6/me/messages',
+//         qs: { access_token: FB_PAGE_ACCESS_TOKEN },
+//         method: 'POST',
+//         json: {
+//             recipient: { id: sender },
+//             message: messageData
+//         }
+//     }, function (error, response, body) {
+//         if (error) {
+//             console.log('Error sending message: ', error);
+//         } else if (response.body.error) {
+//             console.log('Error: ', response.body.error);
+//         }
+//     });
+// }
 
-function sendFBMessage(sender, messageData) {
-
-    request({
-        url: 'https://graph.facebook.com/v2.6/me/messages',
-        qs: { access_token: FB_PAGE_ACCESS_TOKEN },
-        method: 'POST',
-        json: {
-            recipient: { id: sender },
-            message: messageData
-        }
-    }, function (error, response, body) {
-        if (error) {
-            console.log('Error sending message: ', error);
-        } else if (response.body.error) {
-            console.log('Error: ', response.body.error);
-        }
-    });
-}
-
-function sendFBMessageText(sender, messageText) {
-    let messageData = {
-        "text": messageText
-    };
-    sendFBMessage(sender, messageData);
-}
+// function sendFBMessageText(sender, messageText) {
+//     let messageData = {
+//         "text": messageText
+//     };
+//     sendFBMessage(sender, messageData);
+// }
 
 function doSubscribeRequest() {
     request({
