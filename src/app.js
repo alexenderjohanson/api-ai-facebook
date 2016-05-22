@@ -28,6 +28,8 @@ const addresses = new Map();
 
 function processEvent(event) {
     var senderId = event.sender.id;
+    
+    console.log(event.sender);
 
     // let cachedUser = cache.get(senderId);
 
@@ -114,7 +116,6 @@ function processEvent(event) {
                 let complete = !response.result.actionIncomplete;
                 let parameters = response.result.parameters;
                 let responseContexts = response.result.contexts;
-                let userProfile = userProfiles.get(senderId);
 
                 // contexts.set(sender, resultContexts);
                 // if (action == "get-user" && complete) {
