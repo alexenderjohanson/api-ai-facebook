@@ -139,9 +139,9 @@ function repeatOrder(sender, parameters) {
     let contact = parameters.contact || userProfile.phone;
     let email = parameters.email || userProfile.email;
     let productDetail = _.findIndex(data.options, { collection_id: parameters.option });
-    let paymentLink = billplz.generatePaymentLink(productDetail.collection_id, userProfile.name, email, contact, productDetail.price, productDetail.title);
-
-    let payment = data.payment;
-    payment.attachment.payload.buttons[0].url = paymentLink;
-    fb.sendFBMessage(sender, payment);
+    billplz.generatePaymentLink(productDetail.collection_id, userProfile.name, email, contact, productDetail.price, productDetail.title).then(function (result) {
+        let payment = data.payment;
+        payment.attachment.payload.buttons[0].url = paymentLink;
+        fb.sendFBMessage(sender, payment);
+    });
 }
