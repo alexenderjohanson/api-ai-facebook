@@ -27,5 +27,5 @@ exports.getInitialContext = function (text, senderId) {
         }]
     }
 
-    return [];
+    return undefined;
 }

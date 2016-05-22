@@ -100,11 +100,14 @@ function processEvent(event) {
         //         text = "";
         //     }
         // }
+        
+        let initContext = apiaiController.getInitialContext(text, senderId),
+        console.log(initContext);
 
         let apiaiRequest = apiAiService.textRequest(text,
             {
                 sessionId: sessionIds.get(senderId),
-                contexts: apiaiController.getInitialContext(text, senderId),
+                contexts: initContext,
                 resetContexts: apiaiController.shouldClearContext(text)
             });
 
