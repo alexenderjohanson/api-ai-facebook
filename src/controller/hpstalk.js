@@ -135,10 +135,13 @@ function repeatOrder(sender, parameters) {
     data.payment.attachment.payload.buttons[1].payload = CANCEL_ORDER + "-" + shortId;
 
     //generate payment link
+    //https://www.billplz.com/api/v3/bills?email=alexenderjohanson%40yahoo.com&mobile=012-9713303&name=Johanson%20Chew&callback_url=https%3A%2F%2Fwww.google.com
+    https://www.billplz.com/api/v3/bills?collection_id=hpstalka&email=alexenderjohasnon@yahoo.com&mobile=012-9713393&name=Johanson Chew&amount=23.00&callback_url=http://google.com&description=Test order
     let userProfile = cache.get(sender);
     let contact = parameters.contact || userProfile.phone;
     let email = parameters.email || userProfile.email;
-    let productDetail = _.findIndex(data.options, { collection_id: parameters.option });
+    let productDetail = _.find(data.options, { collection_id: parameters.option });
+    console.log(productDetail);
     billplz.generatePaymentLink(productDetail.collection_id, userProfile.name, email, contact, productDetail.price, productDetail.title).then(function (result) {
         let payment = data.payment;
         payment.attachment.payload.buttons[0].url = paymentLink;
