@@ -33,16 +33,18 @@ function processEvent(event) {
 
     if (!cachedUser) {
         try {
-            console.log("get fb profile")
             user.getUserByFbId(senderId).then(function (userResult) {
                 console.log(userResult)
                 
                 if (userResult.length == 0) {
                     return fb.getFbUserProfile(senderId).then(function (result) {
-                        console.log(result);
+                        
+                        if(result){
+                            user.createUser(senderId, result);
+                        }
                     })
                 } else {
-                    console.log(userResult);
+                    cache.put(senderId, userResult);
                 }
             })
         } catch (ex) {
