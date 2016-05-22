@@ -101,7 +101,7 @@ function processEvent(event) {
         //     }
         // }
         
-        let initContext = apiaiController.getInitialContext(text, senderId),
+        let initContext = apiaiController.getInitialContext(text, senderId);
         console.log(initContext);
 
         let apiaiRequest = apiAiService.textRequest(text,
