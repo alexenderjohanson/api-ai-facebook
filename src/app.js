@@ -30,23 +30,26 @@ function processEvent(event) {
     var senderId = event.sender.id;
 
     let cachedUser = cache.get(senderId);
+    
+    console.log(cachedUser);
 
     if (!cachedUser) {
         try {
             user.getUserByFbId(senderId).then(function (userResult) {
-                console.log(userResult)
 
                 if (userResult.length == 0) {
                     fb.getFbUserProfile(senderId).then(function (result) {
 
                         if (result) {
-                            user.createUser(senderId, result).then(function(result){
-                                console.log(result);
+                            user.createUser(senderId, result).then(function (result) {
+                                if (!result && result.lenght > 0) {
+                                    cache.put(senderId, result[0]);
+                                }
                             });
                         }
                     })
                 } else {
-                    cache.put(senderId, userResult);
+                    cache.put(senderId, userResult[0]);
                 }
             });
         } catch (ex) {
