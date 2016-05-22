@@ -28,32 +28,30 @@ const addresses = new Map();
 
 function processEvent(event) {
     var senderId = event.sender.id;
-    
-    console.log(event.sender);
 
-    // let cachedUser = cache.get(senderId);
+    let cachedUser = cache.get(senderId);
 
-    // if (!cacheUser) {
+    if (!cacheUser) {
         
-    //     console.log("get user by fb id");
+        console.log("get user by fb id");
         
-    //     try {
-    //         user.getUserByFbId(senderId).then(function (userResult) {
+        try {
+            user.getUserByFbId(senderId).then(function (userResult) {
                 
-    //             console.log(userResult);
+                console.log(userResult);
                 
-    //             if (!userResult) {
-    //                 return fb.getFbUserProfile(senderId).then(function (result) {
-    //                     console.log(result);
-    //                 })
-    //             } else {
-    //                 console.log(userResult);
-    //             }
-    //         })
-    //     } catch (ex) {
-    //         console.log(ex);
-    //     }
-    // }
+                if (!userResult) {
+                    return fb.getFbUserProfile(senderId).then(function (result) {
+                        console.log(result);
+                    })
+                } else {
+                    console.log(userResult);
+                }
+            })
+        } catch (ex) {
+            console.log(ex);
+        }
+    }
 
     if (event.postback) {
 
