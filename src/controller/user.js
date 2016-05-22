@@ -38,13 +38,13 @@ exports.createUser = function (senderId, fbUser) {
     let user = {
         "uid": senderId,
         "name": `${fbUser.first_name} ${fbUser.last_name}`,
-        "gender": fbUser.gender
+        "gender": fbUser.gender,
+        "email": `${first_name}@test.com`
     }
-    
-    console.log(user);
 
     return fetch(`${API_URL}api/v1/users.json}`, { method: 'POST', body:user, headers: HEADERS }).then(function(result){
-        console.log(result);
-        console.log("create user:" + JSON.stringify(result.json()));
+        return result.json();
+    }, function (error) {
+        console.log(error);
     });
 }

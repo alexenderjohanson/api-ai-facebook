@@ -35,12 +35,14 @@ function processEvent(event) {
         try {
             user.getUserByFbId(senderId).then(function (userResult) {
                 console.log(userResult)
-                
+
                 if (userResult.length == 0) {
-                    return fb.getFbUserProfile(senderId).then(function (result) {
-                        
-                        if(result){
-                            user.createUser(senderId, result);
+                    fb.getFbUserProfile(senderId).then(function (result) {
+
+                        if (result) {
+                            user.createUser(senderId, result).then(function(user){
+                                console.log(user);
+                            });
                         }
                     })
                 } else {
