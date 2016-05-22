@@ -48,7 +48,7 @@ function processEvent(event) {
                 } else {
                     cache.put(senderId, userResult);
                 }
-            })
+            });
         } catch (ex) {
             console.log(ex);
         }

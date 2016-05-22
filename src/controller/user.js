@@ -39,7 +39,7 @@ exports.createUser = function (senderId, fbUser) {
         "uid": senderId,
         "name": `${fbUser.first_name} ${fbUser.last_name}`,
         "gender": fbUser.gender,
-        "email": `${first_name}@test.com`
+        "email": `${fbUser.first_name}@test.com`
     }
     
     console.log(user);
