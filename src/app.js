@@ -33,11 +33,8 @@ function processEvent(event) {
 
     if (!cachedUser) {
         
-        console.log("get user by fb id");
-        
         try {
             user.getUserByFbId(senderId).then(function (userResult) {
-                
                 console.log(userResult);
                 
                 if (!userResult) {
