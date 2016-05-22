@@ -107,7 +107,6 @@ function processEvent(event) {
         let apiaiRequest = apiAiService.textRequest(text,
             {
                 sessionId: sessionIds.get(senderId),
-                contexts: initContext,
                 resetContexts: apiaiController.shouldClearContext(text)
             });
 
