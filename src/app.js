@@ -29,12 +29,9 @@ const addresses = new Map();
 function processEvent(event) {
     var senderId = event.sender.id;
 
-    let user = cache.get(senderId);
+    let cachedUser = cache.get(senderId);
 
-    console.log(user);
-
-    if (!user) {
-
+    if (!cacheUser) {
         try {
             user.getUserByFbId(senderId).then(function (userResult) {
                 if (!userResult) {
