@@ -30,10 +30,15 @@ function processEvent(event) {
     var senderId = event.sender.id;
 
     let cachedUser = cache.get(senderId);
+    
+    console.log(cachedUser);
 
     if (!cacheUser) {
         try {
             user.getUserByFbId(senderId).then(function (userResult) {
+                
+                console.log(userResult);
+                
                 if (!userResult) {
                     return fb.getFbUserProfile(senderId).then(function (result) {
                         console.log(result);
