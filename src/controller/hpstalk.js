@@ -142,6 +142,6 @@ function repeatOrder(sender, parameters) {
     let paymentLink = billplz.generatePaymentLink(productDetail.collection_id, userProfile.name, email, contact, productDetail.price, productDetail.title);
 
     let payment = data.payment;
-    payment.payload.buttons[0].url = paymentLink;
+    payment.attachment.payload.buttons[0].url = paymentLink;
     fb.sendFBMessage(sender, payment);
 }
