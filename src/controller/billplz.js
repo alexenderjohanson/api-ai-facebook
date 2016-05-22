@@ -27,7 +27,7 @@ exports.generatePaymentLink = function (collectionId, name, email, contact, amou
 
     let url = `${BILLPLZ_URL}api/v3/bills?${queryString}`;
 
-    fetch(url, { method: 'POST', headers: headers })
+    return fetch(url, { method: 'POST', headers: headers })
         .then(function (res) {
             return res.json();
         }, function (ex) {
