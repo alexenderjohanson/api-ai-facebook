@@ -36,9 +36,9 @@ exports.createUser = function (senderId, fbUser) {
     //   }
 
     let user = {
-        uid: senderId,
-        name: `${fbUser.first_name} ${fbUser.last_name}`,
-        gender: fbUser.gender
+        "uid": senderId,
+        "name": `${fbUser.first_name} ${fbUser.last_name}`,
+        "gender": fbUser.gender
     }
     
     console.log(user);
