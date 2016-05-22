@@ -138,7 +138,7 @@ function repeatOrder(sender, parameters) {
     let userProfile = cache.get(sender);
     let contact = parameters.contact || userProfile.phone;
     let email = parameters.email || userProfile.email;
-    let productDetail = _.findIndex(data.options, { collection_id: paramters.option });
+    let productDetail = _.findIndex(data.options, { collection_id: parameters.option });
     let paymentLink = billplz.generatePaymentLink(productDetail.collection_id, userProfile.name, email, contact, productDetail.price, productDetail.title);
 
     let payment = data.payment;
