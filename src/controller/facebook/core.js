@@ -44,6 +44,9 @@ function sendFBMessageText(sender, messageText) {
 }
 
 function sendFBMessage(sender, messageData) {
+    
+    console.log("sender:" sender);
+    console.log("data:" messageData);
 
     request({
         url: 'https://graph.facebook.com/v2.6/me/messages',
