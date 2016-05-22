@@ -141,8 +141,12 @@ function repeatOrder(sender, parameters) {
     let productDetail = _.find(data.options, { collection_id: parameters.option });
     console.log(productDetail);
     billplz.generatePaymentLink(productDetail.collection_id, userProfile.name, email, contact, productDetail.price, productDetail.title).then(function (result) {
+        
+        if(!result){
+            fb.sendFBMessageText(sender, "Whoops, we lost your order in the matrix. Neo is on it.");
+        }
         let payment = data.payment;
-        payment.attachment.payload.buttons[0].url = paymentLink;
+        payment.attachment.payload.buttons[0].url = result.url;
         fb.sendFBMessage(sender, payment);
     });
 }
