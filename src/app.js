@@ -34,7 +34,7 @@ function processEvent(event) {
     if (!cachedUser) {
         try {
             user.getUserByFbId(senderId).then(function (userResult) {
-                if (!userResult) {
+                if (!userResult || userResult.length == 0) {
                     
                     console.log("get fb profile")
                     return fb.getFbUserProfile(senderId).then(function (result) {
