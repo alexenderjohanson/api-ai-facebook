@@ -58,14 +58,14 @@ exports.handle = function (response, sender, rawText) {
         cache.put(messageKey, rawText);
 
         fb.processResponseData(sender, responseData, responseText);
-    } else if (_.findIndex(responseContexts, { "name": "hpstalk_dialog_params_contact" })) {
+    } else if (_.findIndex(responseContexts, { "name": "hpstalk_dialog_params_contact" }) >= 0) {
         let userProfile = cache.get(sender);
         if (!userProfile || !userProfile.phone) {
             fb.processResponseData(sender, responseData, responseText);
         } else {
             apiai.textRequest(userProfile.phone, sender);
         }
-    } else if (_.findIndex(responseContexts, { "name": "hpstalk_dialog_params_email" })) {
+    } else if (_.findIndex(responseContexts, { "name": "hpstalk_dialog_params_email" }) >= 0) {
         let userProfile = cache.get(sender);
         console.log(userProfile);
         if (!userProfile || !userProfile.email) {
