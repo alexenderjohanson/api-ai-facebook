@@ -104,7 +104,7 @@ exports.handle = function (sender, payload) {
         response = {
             "text": "Please enter new address"
         }
-    } else if (action == "hpstalkoptiona" || action == "hpstalkoptionb") {
+    } else if (action == "hpstalka" || action == "hpstalkb") {
         response = {
             "recur": true,
             "text": action
