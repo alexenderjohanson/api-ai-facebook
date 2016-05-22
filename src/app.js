@@ -31,16 +31,23 @@ function processEvent(event) {
 
     let user = cache.get(senderId);
 
+    console.log(user);
+
     if (!user) {
-        user.getUserByFbId(senderId).then(function (userResult) {
-            if (!userResult) {
-                return fb.getFbUserProfile(senderId).then(function (result) {
-                    console.log(result);
-                })
-            } else {
-                console.log(userResult);
-            }
-        })
+
+        try {
+            user.getUserByFbId(senderId).then(function (userResult) {
+                if (!userResult) {
+                    return fb.getFbUserProfile(senderId).then(function (result) {
+                        console.log(result);
+                    })
+                } else {
+                    console.log(userResult);
+                }
+            })
+        } catch (ex) {
+            console.log(ex);
+        }
     }
 
     if (event.postback) {
