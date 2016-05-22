@@ -132,7 +132,7 @@ function repeatOrder(sender, parameters) {
     fb.sendFBMessageText(sender, repeatMessage);
 
     let shortId = cache.generateShortId();
-    data.payment.attachment.payload.buttons[0].buttons[1].payload = CANCEL_ORDER + "-" + shortId;
+    data.payment.attachment.payload.buttons[1].payload = CANCEL_ORDER + "-" + shortId;
 
     //generate payment link
     let userProfile = cache.get(sender);
