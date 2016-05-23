@@ -48,3 +48,13 @@ exports.createUser = function (senderId, fbUser) {
         console.log(error);
     });
 }
+
+exports.updateUser = function (user) {
+    
+    // http://dashboard.helprnow.com/api/v1/users/29.json
+    return fetch(`${API_URL}api/v1/users/${user.id}.json`, { method: 'PUT', body:user, headers: HEADERS }).then(function(result){
+        return result.json();
+    }, function (error) {
+        console.log(error);
+    });
+}

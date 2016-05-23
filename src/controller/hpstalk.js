@@ -75,6 +75,28 @@ exports.handle = function (response, sender, rawText) {
         }
     } else if (!actionIncomplete) {
 
+        let userProfile = cache.get(sender);
+        let shouldUpdate = false;
+
+        if (!userProfile.email) {
+            userProfile.email = parameters.email;
+            shouldUpdate = true;
+        }
+
+        if (!userProfile.phone) {
+            userProfile.email = parameters.contact;
+            shouldUpdate = true;
+        }
+
+        if (shouldUpdate) {
+            user.updateUser(userProfile).then(function (result) {
+
+                if (!result && !result.user) {
+                    cache.put(sender, result.user);
+                }
+            });
+        }
+
         repeatOrder(sender, parameters);
         createReqeust(parameters);
     } else {
@@ -141,8 +163,8 @@ function repeatOrder(sender, parameters) {
     let productDetail = _.find(data.options, { collection_id: parameters.option });
     console.log(productDetail);
     billplz.generatePaymentLink(productDetail.collection_id, userProfile.name, email, contact, productDetail.price, productDetail.title).then(function (result) {
-        
-        if(!result){
+
+        if (!result) {
             fb.sendFBMessageText(sender, "Whoops, we lost your order in the matrix. Neo is on it.");
         }
         let payment = data.payment;
