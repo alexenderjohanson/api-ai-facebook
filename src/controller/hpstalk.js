@@ -89,7 +89,6 @@ exports.handle = function (response, sender, rawText) {
         }
 
         if (shouldUpdate) {
-            console.log("updating user");
             user.updateUser(userProfile).then(function (result) {
 
                 if (!result && !result.user) {
