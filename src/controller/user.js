@@ -42,7 +42,7 @@ exports.createUser = function (senderId, fbUser) {
         "email": `${fbUser.first_name}@test.com`
     }
 
-    return fetch(`${API_URL}api/v1/users.json}`, { method: 'POST', body:user, headers: HEADERS }).then(function(result){
+    return fetch(`${API_URL}api/v1/users.json}`, { method: 'POST', body: user, headers: HEADERS }).then(function (result) {
         return result.json();
     }, function (error) {
         console.log(error);
@@ -50,18 +50,24 @@ exports.createUser = function (senderId, fbUser) {
 }
 
 exports.updateUser = function (user) {
-    
+
     console.log("update user:", JSON.stringify(user));
     console.log("update user headers:", JSON.stringify(HEADERS));
-    return fetch(`${API_URL}api/v1/users/${user.id}.json`, { method: 'PUT', body:user, headers: HEADERS }).then(function(result){
+
+    let options = {
+        method: 'PUT',
+        body: user,
+        headers: HEADERS
+    }
+    return fetch(`${API_URL}api/v1/users/${user.id}.json`, options).then(function (result) {
         console.log(result);
-        
+
         console.log(result.ok);
-		console.log(result.status);
-		console.log(result.statusText);
-		console.log(result.headers.raw());
-        console.log(result.body.raw());
-        
+        console.log(result.status);
+        console.log(result.statusText);
+        console.log(result.headers.raw());
+        console.log(result.body);
+
         let json = result.json();
         console.log("update user result:" + JSON.stringify(json));
         return json;
