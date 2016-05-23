@@ -67,7 +67,7 @@ exports.handle = function (response, sender, rawText) {
         }
     } else if (_.findIndex(responseContexts, { "name": "hpstalk_dialog_params_email" }) >= 0) {
         let userProfile = cache.get(sender);
-        console.log(userProfile);
+        console.log("userProfile:" + userProfile);
         if (!userProfile || !userProfile.email) {
             fb.processResponseData(sender, responseData, responseText);
         } else {

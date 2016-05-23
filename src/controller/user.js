@@ -51,26 +51,31 @@ exports.createUser = function (senderId, fbUser) {
 
 exports.updateUser = function (user) {
 
-    console.log("update user:", JSON.stringify(user));
-    console.log("update user headers:", JSON.stringify(HEADERS));
-
     let options = {
-        method: 'PUT',
+        method: 'POST',
         body: user,
         headers: HEADERS
     }
+    
+    console.log(options);
     return fetch(`${API_URL}api/v1/users/${user.id}.json`, options).then(function (result) {
-        console.log(result);
+        // console.log(result);
 
+        console.log(result.url);
         console.log(result.ok);
         console.log(result.status);
         console.log(result.statusText);
         console.log(result.headers.raw());
-        console.log(result.body);
+        
+        return result.json();
 
-        let json = result.json();
-        console.log("update user result:" + JSON.stringify(json));
-        return json;
+        // let json = result.json();
+        // console.log("update user result:" + JSON.stringify(json));
+        // return json;
+    }).then(function(text){
+        
+        console.log(text);
+        
     }, function (error) {
         console.log(error);
     });

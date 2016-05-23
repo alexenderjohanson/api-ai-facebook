@@ -26,7 +26,7 @@ function processEvent(event) {
 
     let cachedUser = cache.get(senderId);
 
-    if (!cachedUser) {
+    if (cachedUser === undefined) {
         try {
             user.getUserByFbId(senderId).then(function (userResult) {
 
@@ -167,6 +167,7 @@ function processEvent(event) {
 // }
 
 function doSubscribeRequest() {
+
     request({
         method: 'POST',
         uri: "https://graph.facebook.com/v2.6/me/subscribed_apps?access_token=" + FB_PAGE_ACCESS_TOKEN
@@ -198,6 +199,7 @@ app.get('/webhook/', function (req, res) {
 app.post('/webhook/', function (req, res) {
 
     try {
+
         var messaging_events = req.body.entry[0].messaging;
 
         for (var i = 0; i < messaging_events.length; i++) {
@@ -223,5 +225,8 @@ app.listen(REST_PORT, function () {
 
 // Expose app
 exports = module.exports = app;
+
+// let userProfile = { "id": 29, "email": "alexenderjohanson@yahoo.com", "uid": "1121605954527014", "name": "Johanson Chew", "phone": "012-9713303" };
+// user.updateUser(userProfile);
 
 doSubscribeRequest();
