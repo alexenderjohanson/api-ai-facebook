@@ -53,6 +53,7 @@ exports.updateUser = function (user) {
     
     // http://dashboard.helprnow.com/api/v1/users/29.json
     return fetch(`${API_URL}api/v1/users/${user.id}.json`, { method: 'PUT', body:user, headers: HEADERS }).then(function(result){
+        console.log("update result:" + result.json());
         return result.json();
     }, function (error) {
         console.log(error);
