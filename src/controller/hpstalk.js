@@ -50,7 +50,7 @@ exports.handle = function (response, sender, rawText) {
                 console.log(ex);
             }
         } else {
-            fb.sendFBMessageText(sender, "Sorry, your delivery date has to be at least 2 days in advance. Please try again another date");
+            fb.sendFBMessageText(sender, "Sorry, your delivery date has to be at least 2 days in advance and before 31/5.\nPlease try again another date");
         }
     } else if (_.findIndex(responseContexts, { "name": "hpstalk_dialog_params_sendername" }) >= 0) {
 
@@ -84,7 +84,7 @@ exports.handle = function (response, sender, rawText) {
         }
 
         if (!userProfile.phone) {
-            userProfile.contact = parameters.contact;
+            userProfile.phone = parameters.contact;
             shouldUpdate = true;
         }
 
