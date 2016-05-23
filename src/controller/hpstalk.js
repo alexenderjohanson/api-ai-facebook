@@ -84,7 +84,7 @@ exports.handle = function (response, sender, rawText) {
         }
 
         if (!userProfile.phone) {
-            userProfile.email = parameters.contact;
+            userProfile.contact = parameters.contact;
             shouldUpdate = true;
         }
 
