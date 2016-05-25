@@ -40,7 +40,7 @@ function processEvent(event) {
                                 }
                             });
                         }
-                    })
+                    });
                 } else {
                     cache.put(senderId, userResult[0]);
                 }
@@ -73,7 +73,6 @@ function processEvent(event) {
     } else if (event.message && event.message.text) {
         let text = event.message.text;
 
-        console.log("text:" + text);
         apiaiController.textRequest(text, senderId);
     }
 }

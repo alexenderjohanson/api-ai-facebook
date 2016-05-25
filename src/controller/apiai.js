@@ -41,6 +41,8 @@ exports.getInitialContext = function (text, senderId) {
 
 exports.textRequest = function (text, senderId) {
 
+    console.log("text:" + text);
+
     if (!sessionIds.has(senderId)) {
         sessionIds.set(senderId, uuid.v1());
     }
@@ -66,6 +68,10 @@ exports.textRequest = function (text, senderId) {
             //     sendFBMessageText(sender, `Name: ${userProfile.first_name} ${userProfile.last_name}\nGender: ${userProfile.gender}\nTime zone: ${userProfile.timezone}`);
 
             // } else
+
+            console.log("action:" + action);
+            console.log("response:" + responseText);
+
             if (action == "hpstalk") {
 
                 hpstalk.handle(response, senderId, text);
