@@ -130,7 +130,7 @@ function repeatOrder(sender, parameters) {
     let contact = parameters.contact || userProfile.phone;
     let email = parameters.email || userProfile.email;
     let productDetail = _.find(data.options, { collection_id: parameters.option });
-    console.log(productDetail);
+    // console.log(productDetail);
     billplz.generatePaymentLink(productDetail.collection_id, userProfile.name, email, contact, productDetail.price, productDetail.title).then(function (result) {
 
         if (!result) {
