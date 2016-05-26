@@ -226,6 +226,17 @@ app.listen(REST_PORT, function () {
 exports = module.exports = app;
 
 // let userProfile = { "id": 29, "email": "alexenderjohanson@yahoo.com", "uid": "1121605954527014", "name": "Johanson Chew", "phone": "012-9713303" };
-// user.updateUser(userProfile);
+// user.updateUser(userProfile).then(function (userResult) {
+//     console.log("DEBUG USER:" + JSON.stringify(userResult));
+// });
+
+
+// user.getUserByFbId("1121605954527014").then(function(user){
+//     console.log("DEBUG USER:" + JSON.stringify(user));
+// });
+
+// fb.getFbUserProfile("1121605954527014").then(function (user) {
+//     console.log("DEBUG USER:" + JSON.stringify(user));
+// });
 
 doSubscribeRequest();

@@ -4,7 +4,7 @@ const request = require('request');
 const fetch = require('node-fetch');
 const appConfig = require('../../../app');
 
-const FB_PAGE_ACCESS_TOKEN = process.env.FB_PAGE_ACCESS_TOKEN || appConfig.env.FB_PAGE_ACCESS_TOKEN;
+const FB_PAGE_ACCESS_TOKEN = process.env.FB_PAGE_ACCESS_TOKEN || appConfig.env.FB_PAGE_ACCESS_TOKEN.value;
 
 exports.forceSend = function(req, res, next){
     
@@ -120,7 +120,9 @@ exports.getFbUserProfile = getFbUserProfile;
 
 function getFbUserProfile(fbUserId) {
 
-    return fetch(`https://graph.facebook.com/v2.6/${fbUserId}?fields=first_name,last_name,profile_pic,locale,timezone,gender&access_token=${FB_PAGE_ACCESS_TOKEN}`).then(function (res) {
+    let url = `https://graph.facebook.com/v2.6/${fbUserId}?fields=first_name,last_name,profile_pic,locale,timezone,gender&access_token=${FB_PAGE_ACCESS_TOKEN.value}`;
+    
+    return fetch(url).then(function (res) {
         return res.json();
     }).then(function (json) {
         return json;

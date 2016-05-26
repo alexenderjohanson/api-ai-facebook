@@ -1,6 +1,6 @@
 'use strict';
 
-const fetch = require('node-fetch');
+var rp = require('request-promise');
 
 const API_URL = "http://dashboard.helprnow.com/";
 const HEADERS = {
@@ -10,21 +10,25 @@ const HEADERS = {
 
 exports.getUserByFbId = function (fbId) {
 
-    return fetch(`${API_URL}api/v1/users.json?fbid=${fbId}`, { method: "GET", headers: HEADERS }).then(function (res) {
+  let options = {
+    uri: `${API_URL}api/v1/users.json?fbid=${fbId}`,
+    headers: HEADERS
+  }
 
-        return res.json();
-    }, function (error) {
-        console.log(error);
+    return rp(options).then(function (res) {
+        return res;
+    }).catch(function (err) {
+      console.log(err);
     });
 }
 
 exports.createUser = function (senderId, fbUser) {
 
-    //     { first_name: 'Johanson', 
-    //     last_name: 'Chew', 
-    //     profile_pic: 'https://scontent.xx.fbcdn.net/v/t1.0-1/p200x200/1377497_10151773468449760_1886125195_n.jpg?oh=ce45faea2d5661b6004fc6cedf71b4a3&oe=57E64824', 
-    //     locale: 'en_GB', 
-    //     timezone: 8, 
+    //     { first_name: 'Johanson',
+    //     last_name: 'Chew',
+    //     profile_pic: 'https://scontent.xx.fbcdn.net/v/t1.0-1/p200x200/1377497_10151773468449760_1886125195_n.jpg?oh=ce45faea2d5661b6004fc6cedf71b4a3&oe=57E64824',
+    //     locale: 'en_GB',
+    //     timezone: 8,
     //     gender: 'male' }
 
     //     {
@@ -42,41 +46,46 @@ exports.createUser = function (senderId, fbUser) {
         "email": `${fbUser.first_name}@test.com`
     }
 
-    return fetch(`${API_URL}api/v1/users.json}`, { method: 'POST', body: user, headers: HEADERS }).then(function (result) {
-        return result.json();
-    }, function (error) {
-        console.log(error);
+      let options = {
+        uri: `${API_URL}api/v1/users.json}`,
+        headers: HEADERS,
+        method: 'POST',
+        body:user
+      }
+
+    return rp(options).then(function (result) {
+        return result;
+    }).catch(function (err) {
+      console.log(err);
     });
 }
 
 exports.updateUser = function (user) {
 
     let options = {
-        method: 'POST',
+        method: 'PUT',
+        uri: `${API_URL}api/v1/users/${user.id}.json`,
         body: user,
+        json: true,
         headers: HEADERS
     }
-    
-    console.log(options);
-    return fetch(`${API_URL}api/v1/users/${user.id}.json`, options).then(function (result) {
-        // console.log(result);
 
-        console.log(result.url);
-        console.log(result.ok);
-        console.log(result.status);
-        console.log(result.statusText);
-        console.log(result.headers.raw());
-        
-        return result.json();
+    console.log(options);
+    return rp(options).then(function (result) {
+        return result;
+
+        // console.log(result.url);
+        // console.log(result.ok);
+        // console.log(result.status);
+        // console.log(result.statusText);
+        // console.log(result.headers.raw());
+
+        // return result.json();
 
         // let json = result.json();
         // console.log("update user result:" + JSON.stringify(json));
         // return json;
-    }).then(function(text){
-        
-        console.log(text);
-        
-    }, function (error) {
-        console.log(error);
+    }).catch(function(err){
+        console.log(err);
     });
 }
