@@ -10,8 +10,6 @@ exports.createRequest = function (userId, category, billplzId, raw) {
     // request[description]
     // request[due_at]
     // request[requestable][recipient_address]
-    
-    console.log("create request. userId:" + userId)
 
     let form = {
         "request[category]": category,

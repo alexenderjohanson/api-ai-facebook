@@ -3,12 +3,9 @@
 const request = require('request');
 const fetch = require('node-fetch');
 const appConfig = require('../../../app');
+const moment = require('moment');
 
 const FB_PAGE_ACCESS_TOKEN = process.env.FB_PAGE_ACCESS_TOKEN || appConfig.env.FB_PAGE_ACCESS_TOKEN.value;
-
-exports.forceSend = function(req, res, next){
-    
-};
 
 exports.processResponseData = function (sender, responseData, responseText) {
 
@@ -44,7 +41,7 @@ function sendFBMessageText(sender, messageText) {
 }
 
 function sendFBMessage(sender, messageData) {
-    
+
     console.log("sender:", sender);
     console.log("data:", messageData);
 
@@ -121,7 +118,7 @@ exports.getFbUserProfile = getFbUserProfile;
 function getFbUserProfile(fbUserId) {
 
     let url = `https://graph.facebook.com/v2.6/${fbUserId}?fields=first_name,last_name,profile_pic,locale,timezone,gender&access_token=${FB_PAGE_ACCESS_TOKEN}`;
-    
+
     return fetch(url).then(function (res) {
         return res.json();
     }).then(function (json) {
@@ -131,11 +128,50 @@ function getFbUserProfile(fbUserId) {
     });
 }
 
-exports.apiSendFBMessageText = function(req, res, next){
-    
+exports.apiSendFBMessageText = function (req, res, next) {
+
     let fbId = req.params.fbId;
     let message = req.body.text;
     sendFBMessageText(fbId, message);
-    
+
     res.json({});
+}
+
+exports.sendReceipt = function (sender, orderId, title, subtitle, recipient, price, address1, address2, city, postcode, state) {
+
+    let response = {
+        "attachment": {
+            "type": "template",
+            "payload": {
+                "template_type": "receipt",
+                "recipient_name": recipient,
+                "order_number": orderId,
+                "currency": "MYR",
+                "payment_method": "Billplz",
+                // "order_url": "http://petersapparel.parseapp.com/order?order_id=123456",
+                "timestamp": moment().seconds(),
+                "elements": [
+                    {
+                        "title": title,
+                        "subtitle": subtitle,
+                        "price": price,
+                        "currency": "MYR",
+                    },
+                ],
+                "address": {
+                    "street_1": address1,
+                    "street_2": address2,
+                    "city": city,
+                    "postal_code": postcode,
+                    "state": state,
+                    "country":"Malaysia"
+                },
+                "summary": {
+                    "total_cost": price
+                }
+            }
+        }
+    };
+
+    sendFBMessage(sender, response);
 }

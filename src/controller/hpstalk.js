@@ -142,6 +142,9 @@ function repeatOrder(sender, parameters) {
 
         //create request
         hprequest.createRequest(userProfile.id, "Gift", result.id, message).then(function (result) {
+            let locationResult = location.validatePostcode(parameters.postcode);
+
+            fb.sendReceipt(sender, result.id, productDetail.title, "", parameters.recipientName, productDetail.price / 100, parameters.address1, parameters.address2.toLowerCase() === "na" ? "" : parameters.address2, locationResult.city, locationResult.postcode, locationResult.state);
             console.log("DEBUG:" + JSON.stringify(result));
         });
 
@@ -160,8 +163,8 @@ function parametersToString(sender, parameters) {
 
     let locationResult = location.validatePostcode(parameters.postcode);
 
-    if (parameters.address2.toLowerCase() == "na") {
-        parameters.address2 = undefined;
+    if (parameters.address2.toLowerCase() === "na") {
+        parameters.address2 = "";
     } else {
         parameters.address2 = `\n` + parameters.address2 + `,`;
     }
@@ -171,3 +174,4 @@ function parametersToString(sender, parameters) {
 
     return `Delivery Address:\n${address}Delivery Date: ${parameters.date}\nRecipient Name: ${parameters.recipientName}\nRecipient Contact: ${parameters.recipientContact}\nMessage:\n${message}\nName on card: ${parameters.senderName}`;
 }
+
