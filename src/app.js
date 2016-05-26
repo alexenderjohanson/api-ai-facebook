@@ -11,7 +11,7 @@ const postback = require('./controller/facebook/postback');
 const cache = require('./controller/cache');
 const user = require('./controller/user');
 const fb = require('./controller/facebook/core');
-
+const hprequest = require('./controller/hprequest');
 
 const REST_PORT = (process.env.PORT || 5000);
 const FB_VERIFY_TOKEN = process.env.FB_VERIFY_TOKEN || appConfig.env.FB_VERIFY_TOKEN;
@@ -241,6 +241,12 @@ exports = module.exports = app;
 // fb.getFbUserProfile("1121605954527014").then(function (user) {
 //     console.log("DEBUG USER:" + JSON.stringify(user));
 // });
+
+// function (userId, category, billplzId, raw) {
+// hprequest.creteRequest("31", "Gift", "sek3ok", "raw string").then(function (result) {
+//     console.log("DEBUG REQUEST:" + JSON.stringify(result));
+// });
+
 
 
 doSubscribeRequest();

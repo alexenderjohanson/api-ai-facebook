@@ -9,6 +9,7 @@ const cache = require('./cache');
 const user = require('./user');
 const billplz = require('./billplz');
 const apiai = require('./apiai');
+const hpreqiest = require('./hprequest');
 
 const OPTION_A = "hpstalka";
 const OPTION_B = "hpstalkb";
@@ -117,18 +118,39 @@ function validateDate(dateStr) {
 
 function createReqeust(sender) {
 
-    user.getUserByFbId(sender).then(function (userResult) {
-        if (!userResult) {
-            return fb.getFbUserProfile(sender).then(function (result) {
-                console.log(result);
-            })
-        } else {
-            return userResult
-        }
-    })
 }
 
 function repeatOrder(sender, parameters) {
+
+    let message = parametersToString(sender, parameters);
+    let repeatMessage = `Let me repeat your order\n${message}`;
+
+    fb.sendFBMessageText(sender, repeatMessage);
+
+    let shortId = cache.generateShortId();
+    // data.payment.attachment.payload.buttons[1].payload = CANCEL_ORDER + "-" + shortId;
+
+    //generate payment link
+    let userProfile = cache.get(sender);
+    let contact = parameters.contact || userProfile.phone;
+    let email = parameters.email || userProfile.email;
+    let productDetail = _.find(data.options, { collection_id: parameters.option });
+    console.log(productDetail);
+    billplz.generatePaymentLink(productDetail.collection_id, userProfile.name, email, contact, productDetail.price, productDetail.title).then(function (result) {
+
+        if (!result) {
+            fb.sendFBMessageText(sender, "Whoops, we lost your order in the matrix. Neo is on it.");
+        }
+        let payment = data.payment;
+        payment.attachment.payload.buttons[0].url = result.url;
+        fb.sendFBMessage(sender, payment);
+
+        //create request
+        createReqeust(userProfile.id, "Gift", result.id, message);
+    });
+}
+
+function parametersToString(sender, parameters) {
 
     // address1
     // address2
@@ -146,29 +168,8 @@ function repeatOrder(sender, parameters) {
         parameters.address2 = `\n` + parameters.address2 + `,`;
     }
 
-    let address = `${parameters.address1},${parameters.address2}\n${parameters.postcode}, ${locationResult.city},\n${locationResult.state}\n\n`
+    let address = `${parameters.address1},${parameters.address2}\n${parameters.postcode}, ${locationResult.city},\n${locationResult.state}\n\n`;
     let message = cache.get(MESSAGE_KEY + sender);
 
-    let repeatMessage = `Let me repeat your order\nAddress:\n${address}Delivery Date: ${parameters.date}\nRecipient Name: ${parameters.recipientName}\nRecipient Contact: ${parameters.recipientContact}\nMessage:\n${message}\nName on card: ${parameters.senderName}`
-
-    fb.sendFBMessageText(sender, repeatMessage);
-
-    let shortId = cache.generateShortId();
-    data.payment.attachment.payload.buttons[1].payload = CANCEL_ORDER + "-" + shortId;
-
-    //generate payment link
-    let userProfile = cache.get(sender);
-    let contact = parameters.contact || userProfile.phone;
-    let email = parameters.email || userProfile.email;
-    let productDetail = _.find(data.options, { collection_id: parameters.option });
-    console.log(productDetail);
-    billplz.generatePaymentLink(productDetail.collection_id, userProfile.name, email, contact, productDetail.price, productDetail.title).then(function (result) {
-
-        if (!result) {
-            fb.sendFBMessageText(sender, "Whoops, we lost your order in the matrix. Neo is on it.");
-        }
-        let payment = data.payment;
-        payment.attachment.payload.buttons[0].url = result.url;
-        fb.sendFBMessage(sender, payment);
-    });
+    return `Address:\n${address}Delivery Date: ${parameters.date}\nRecipient Name: ${parameters.recipientName}\nRecipient Contact: ${parameters.recipientContact}\nMessage:\n${message}\nName on card: ${parameters.senderName}`;
 }

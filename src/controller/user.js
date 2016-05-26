@@ -1,18 +1,13 @@
 'use strict';
 
-var rp = require('request-promise');
-
-const API_URL = "http://dashboard.helprnow.com/";
-const HEADERS = {
-    "Content-Type": "application/json",
-    "Authorization": "Basic aGVscHI6aGVscHJiMHQ="
-}
+const rp = require('request-promise');
+const config = require('../config/config');
 
 exports.getUserByFbId = function (fbId) {
 
     let options = {
-        uri: `${API_URL}api/v1/users.json?fbid=${fbId}`,
-        headers: HEADERS,
+        uri: `${config.API_URL}api/v1/users.json?fbid=${fbId}`,
+        headers: config.HEADERS,
         json: true
     }
 
@@ -48,8 +43,8 @@ exports.createUser = function (senderId, fbUser) {
     }
 
     let options = {
-        uri: `${API_URL}api/v1/users.json}`,
-        headers: HEADERS,
+        uri: `${config.API_URL}api/v1/users.json}`,
+        headers: config.HEADERS,
         method: 'POST',
         json: true,
         body: user
@@ -66,11 +61,11 @@ exports.updateUser = function (user) {
 
     let options = {
         method: 'PUT',
-        uri: `${API_URL}api/v1/users/${user.id}.json`,
+        uri: `${config.API_URL}api/v1/users/${user.id}.json`,
         body: user,
         json: true,
-        headers: HEADERS
-    }
+        headers: config.HEADERS
+    };
 
     console.log(options);
     return rp(options).then(function (result) {
