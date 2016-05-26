@@ -9,7 +9,7 @@ const cache = require('./cache');
 const user = require('./user');
 const billplz = require('./billplz');
 const apiai = require('./apiai');
-const hpreqiest = require('./hprequest');
+const hprequest = require('./hprequest');
 
 const OPTION_A = "hpstalka";
 const OPTION_B = "hpstalkb";
@@ -116,10 +116,6 @@ function validateDate(dateStr) {
     return deliveryDate.isAfter(moment().add(2, 'days')) && deliveryDate.isBefore(moment("2016-6-1", "YYYY-MM-DD"));
 }
 
-function createReqeust(sender) {
-
-}
-
 function repeatOrder(sender, parameters) {
 
     let message = parametersToString(sender, parameters);
@@ -146,7 +142,7 @@ function repeatOrder(sender, parameters) {
         fb.sendFBMessage(sender, payment);
 
         //create request
-        createReqeust(userProfile.id, "Gift", result.id, message);
+        hprequest.createReqeust(userProfile.id, "Gift", result.id, message);
     });
 }
 
