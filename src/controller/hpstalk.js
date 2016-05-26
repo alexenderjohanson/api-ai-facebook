@@ -139,11 +139,12 @@ function repeatOrder(sender, parameters) {
         let payment = data.payment;
         payment.attachment.payload.buttons[0].url = result.url;
         fb.sendFBMessage(sender, payment);
-
-        console.log("create request");
+        
         //create request
         try {
-            hprequest.createRequest(userProfile.id, "Gift", result.id, message);
+            hprequest.createRequest(userProfile.id, "Gift", result.id, message).then(function(result){
+                console.log("DEBUG:" + JSON.stringify(result));
+            });
         } catch (ex) {
             console.log(ex);
         }
@@ -172,5 +173,5 @@ function parametersToString(sender, parameters) {
     let address = `${parameters.address1},${parameters.address2}\n${parameters.postcode}, ${locationResult.city},\n${locationResult.state}\n\n`;
     let message = cache.get(MESSAGE_KEY + sender);
 
-    return `Address:\n${address}Delivery Date: ${parameters.date}\nRecipient Name: ${parameters.recipientName}\nRecipient Contact: ${parameters.recipientContact}\nMessage:\n${message}\nName on card: ${parameters.senderName}`;
+    return `Delivery Address:\n${address}Delivery Date: ${parameters.date}\nRecipient Name: ${parameters.recipientName}\nRecipient Contact: ${parameters.recipientContact}\nMessage:\n${message}\nName on card: ${parameters.senderName}`;
 }
