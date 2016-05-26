@@ -79,7 +79,7 @@ exports.handle = function (response, sender, rawText) {
         let userProfile = cache.get(sender);
         let shouldUpdate = false;
 
-        if (!userProfile.email) {
+        if (!userProfile.email || userProfile.email === "test@test.com") {
             userProfile.email = parameters.email;
             shouldUpdate = true;
         }
@@ -99,7 +99,6 @@ exports.handle = function (response, sender, rawText) {
         }
 
         repeatOrder(sender, parameters);
-        createReqeust(parameters);
     } else {
         fb.processResponseData(sender, responseData, responseText);
     }
@@ -141,8 +140,14 @@ function repeatOrder(sender, parameters) {
         payment.attachment.payload.buttons[0].url = result.url;
         fb.sendFBMessage(sender, payment);
 
+        console.log("create request");
         //create request
-        hprequest.createReqeust(userProfile.id, "Gift", result.id, message);
+        try {
+            hprequest.createReqeust(userProfile.id, "Gift", result.id, message);
+        } catch (ex) {
+            console.log(ex);
+        }
+
     });
 }
 
