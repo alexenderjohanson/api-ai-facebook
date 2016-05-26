@@ -4,7 +4,9 @@
  * Module dependencies.
  */
 var express = require('express');
+var path = require('path');
 var bodyParser = require('body-parser');
+var config = require('./config');
 // var extractUserFromBearerToken = require("../app/middlewares/extractUserFromBearerToken");
 
 module.exports = function () {
@@ -44,6 +46,11 @@ module.exports = function () {
     //     //});
     //     res.status(404).json("Api not found");
     // });
+
+    config.getGlobbedFiles(['./src/routes/**/*.js', "!./src/routes/private/*.js"]).forEach(function (routePath) {
+      require(path.resolve(routePath))(app);
+      // require(path.resolve(routePath))(publicRouter);
+    });
 
     return app;
 };

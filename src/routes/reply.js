@@ -4,7 +4,7 @@
  * Module dependencies.
  */
 
-var fb = require('../controllers/facebook/core');
+var fb = require('../controller/facebook/core');
 
 module.exports = function (app) {
   app.route('/reply/:fbId')
