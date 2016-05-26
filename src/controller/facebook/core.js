@@ -148,7 +148,6 @@ exports.sendReceipt = function (sender, orderId, title, subtitle, recipient, pri
                 "order_number": orderId,
                 "currency": "MYR",
                 "payment_method": "Billplz",
-                // "order_url": "http://petersapparel.parseapp.com/order?order_id=123456",
                 "timestamp": moment().seconds(),
                 "elements": [
                     {
