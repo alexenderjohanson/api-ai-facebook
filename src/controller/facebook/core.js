@@ -134,7 +134,7 @@ function getFbUserProfile(fbUserId) {
 exports.apiSendFBMessageText = function(req, res, next){
     
     let fbId = req.params.fbId;
-    let message = req.params.body;
+    let message = req.body.text;
     sendFBMessageText(fbId, message);
     
     res.json({});
