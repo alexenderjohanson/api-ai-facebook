@@ -130,3 +130,12 @@ function getFbUserProfile(fbUserId) {
         console.log(error);
     });
 }
+
+exports.apiSendFBMessageText = function(req, res, next){
+    
+    let fbId = req.params.fbId;
+    let message = req.params.body;
+    sendFBMessageText(fbId, message);
+    
+    res.json({});
+}

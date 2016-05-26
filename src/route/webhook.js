@@ -7,8 +7,8 @@
 var fb = require('../controllers/facebook/core');
 
 module.exports = function (app) {
-  app.route('/reply/:userId')
-    .get(fb.sendFBMessageText);
+  app.route('/reply/:fbId')
+    .post(fb.apiSendFBMessageText);
 
 //   app.route('/suggest/:term')
 //     .get(suggest.apiSuggest);

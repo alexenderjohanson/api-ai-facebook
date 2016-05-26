@@ -139,15 +139,11 @@ function repeatOrder(sender, parameters) {
         let payment = data.payment;
         payment.attachment.payload.buttons[0].url = result.url;
         fb.sendFBMessage(sender, payment);
-        
+
         //create request
-        try {
-            hprequest.createRequest(userProfile.id, "Gift", result.id, message).then(function(result){
-                console.log("DEBUG:" + JSON.stringify(result));
-            });
-        } catch (ex) {
-            console.log(ex);
-        }
+        hprequest.createRequest(userProfile.id, "Gift", result.id, message).then(function (result) {
+            console.log("DEBUG:" + JSON.stringify(result));
+        });
 
     });
 }
