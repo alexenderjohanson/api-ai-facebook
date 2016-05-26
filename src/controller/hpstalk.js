@@ -143,7 +143,7 @@ function repeatOrder(sender, parameters) {
         console.log("create request");
         //create request
         try {
-            hprequest.createReqeust(userProfile.id, "Gift", result.id, message);
+            hprequest.createRequest(userProfile.id, "Gift", result.id, message);
         } catch (ex) {
             console.log(ex);
         }

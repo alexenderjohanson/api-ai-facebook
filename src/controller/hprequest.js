@@ -3,7 +3,7 @@
 const rp = require('request-promise');
 const config = require('../config/config');
 
-exports.creteRequest = function (userId, category, billplzId, raw) {
+exports.createRequest = function (userId, category, billplzId, raw) {
 
     // request[category]=Gift
     // request[order][billplz_api]=12345`
