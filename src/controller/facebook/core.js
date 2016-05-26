@@ -120,7 +120,7 @@ exports.getFbUserProfile = getFbUserProfile;
 
 function getFbUserProfile(fbUserId) {
 
-    let url = `https://graph.facebook.com/v2.6/${fbUserId}?fields=first_name,last_name,profile_pic,locale,timezone,gender&access_token=${FB_PAGE_ACCESS_TOKEN.value}`;
+    let url = `https://graph.facebook.com/v2.6/${fbUserId}?fields=first_name,last_name,profile_pic,locale,timezone,gender&access_token=${FB_PAGE_ACCESS_TOKEN}`;
     
     return fetch(url).then(function (res) {
         return res.json();

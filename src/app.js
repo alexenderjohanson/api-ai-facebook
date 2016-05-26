@@ -31,6 +31,9 @@ function processEvent(event) {
             user.getUserByFbId(senderId).then(function (userResult) {
 
                 if (userResult.length === 0) {
+
+                    console.log("create new user");
+
                     fb.getFbUserProfile(senderId).then(function (result) {
 
                         if (result) {
@@ -238,5 +241,6 @@ exports = module.exports = app;
 // fb.getFbUserProfile("1121605954527014").then(function (user) {
 //     console.log("DEBUG USER:" + JSON.stringify(user));
 // });
+
 
 doSubscribeRequest();

@@ -10,15 +10,16 @@ const HEADERS = {
 
 exports.getUserByFbId = function (fbId) {
 
-  let options = {
-    uri: `${API_URL}api/v1/users.json?fbid=${fbId}`,
-    headers: HEADERS
-  }
+    let options = {
+        uri: `${API_URL}api/v1/users.json?fbid=${fbId}`,
+        headers: HEADERS,
+        json: true
+    }
 
     return rp(options).then(function (res) {
         return res;
     }).catch(function (err) {
-      console.log(err);
+        console.log(err);
     });
 }
 
@@ -43,20 +44,21 @@ exports.createUser = function (senderId, fbUser) {
         "uid": senderId,
         "name": `${fbUser.first_name} ${fbUser.last_name}`,
         "gender": fbUser.gender,
-        "email": `${fbUser.first_name}@test.com`
+        "email": `test@test.com`
     }
 
-      let options = {
+    let options = {
         uri: `${API_URL}api/v1/users.json}`,
         headers: HEADERS,
         method: 'POST',
-        body:user
-      }
+        json: true,
+        body: user
+    }
 
     return rp(options).then(function (result) {
         return result;
     }).catch(function (err) {
-      console.log(err);
+        console.log(err);
     });
 }
 
@@ -85,7 +87,7 @@ exports.updateUser = function (user) {
         // let json = result.json();
         // console.log("update user result:" + JSON.stringify(json));
         // return json;
-    }).catch(function(err){
+    }).catch(function (err) {
         console.log(err);
     });
 }
