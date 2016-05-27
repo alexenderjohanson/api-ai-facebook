@@ -16,7 +16,7 @@ exports.generatePaymentLink = function (collectionId, name, email, contact, amou
             mobile: contact,
             name: name,
             amount: amount,
-            callback_url: "https://www.google.com",
+            callback_url: "http://dashboard.helprnow.com/orders",
             description: desc
         }
 
