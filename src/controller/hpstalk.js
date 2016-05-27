@@ -145,7 +145,7 @@ function repeatOrder(sender, parameters) {
             let locationResult = location.validatePostcode(parameters.postcode);
 
             try {
-                fb.sendReceipt(sender, result.id, productDetail.title, "", parameters.recipientName, productDetail.price / 100, parameters.address1, parameters.address2.toLowerCase() === "na" ? "" : parameters.address2, locationResult.city, locationResult.postcode, locationResult.state);
+                fb.sendReceipt(sender, result.request.id, productDetail.title, "", parameters.recipientName, productDetail.price / 100, parameters.address1, parameters.address2.toLowerCase() === "na" ? "" : parameters.address2, locationResult.city, locationResult.postcode, locationResult.state);
             } catch (ex) {
                 console.log(ex);
             }

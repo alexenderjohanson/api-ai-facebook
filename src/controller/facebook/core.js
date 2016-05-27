@@ -148,7 +148,7 @@ exports.sendReceipt = function (sender, orderId, title, subtitle, recipient, pri
                 "order_number": orderId,
                 "currency": "MYR",
                 "payment_method": "Billplz",
-                "timestamp": moment().seconds(),
+                "timestamp": moment().unix(),
                 "elements": [
                     {
                         "title": title,
