@@ -144,7 +144,11 @@ function repeatOrder(sender, parameters) {
         hprequest.createRequest(userProfile.id, "Gift", result.id, message).then(function (result) {
             let locationResult = location.validatePostcode(parameters.postcode);
 
-            fb.sendReceipt(sender, result.id, productDetail.title, "", parameters.recipientName, productDetail.price / 100, parameters.address1, parameters.address2.toLowerCase() === "na" ? "" : parameters.address2, locationResult.city, locationResult.postcode, locationResult.state);
+            try {
+                fb.sendReceipt(sender, result.id, productDetail.title, "", parameters.recipientName, productDetail.price / 100, parameters.address1, parameters.address2.toLowerCase() === "na" ? "" : parameters.address2, locationResult.city, locationResult.postcode, locationResult.state);
+            } catch (ex) {
+                console.log(ex);
+            }
             console.log("DEBUG:" + JSON.stringify(result));
         });
 
