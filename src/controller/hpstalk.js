@@ -79,7 +79,7 @@ exports.handle = function (response, sender, rawText) {
         let userProfile = cache.get(sender);
         let shouldUpdate = false;
 
-        if (!userProfile.email || userProfile.email === "test@test.com") {
+        if (!userProfile.email || _.endsWith(userProfile.email, '@test.com')) {
             userProfile.email = parameters.email;
             shouldUpdate = true;
         }
