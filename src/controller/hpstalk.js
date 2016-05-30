@@ -69,7 +69,7 @@ exports.handle = function (response, sender, rawText) {
     } else if (_.findIndex(responseContexts, { "name": "hpstalk_dialog_params_email" }) >= 0) {
         let userProfile = cache.get(sender);
         console.log("userProfile:" + userProfile);
-        if (!userProfile || !userProfile.email) {
+        if (!userProfile || !userProfile.email || _.endsWith(userProfile.email, '@test.com')) {
             fb.processResponseData(sender, responseData, responseText);
         } else {
             apiai.textRequest(userProfile.email, sender);
